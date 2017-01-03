@@ -71,15 +71,15 @@ $UI-opacity: (
 */
 
 $colors: (
-  dark: (
-    primary-text: color('foreground', 'darker', $opacity: .87),
-    secondary-text: color('foreground', 'darker', $opacity: .54),
-    disabled-text: color('foreground', 'darker', $opacity: .38)
+  dark-text: (
+    primary: color('foreground', 'darker', $opacity: .87),
+    secondary: color('foreground', 'darker', $opacity: .54),
+    disabled: color('foreground', 'darker', $opacity: .38)
   ),
-  light: (
-    primary-text: color('foreground', 'lighter'),
-    secondary-text: color('foreground', 'lighter', $opacity: .70),
-    disabled-text: color('foreground', 'lighter', $opacity: .50)
+  light-text: (
+    primary: color('foreground', 'lighter'),
+    secondary: color('foreground', 'lighter', $opacity: .70),
+    disabled: color('foreground', 'lighter', $opacity: .50)
   ),
   dividers: color('foreground', 'darker', $opacity: .12)
 );
