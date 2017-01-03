@@ -2,7 +2,19 @@
 // This file contains all application-wide Sass variables.
 // -----------------------------------------------------------------------------
 
+$conf-header: (
+  min-height: 100px
+);
+
+$conf-main: (
+  min-height: 100vh
+);
+
+$conf-footer: (
+  min-height: 50px
+);
 
 $conf-sideNav: (
   width: 150px
 );
+
