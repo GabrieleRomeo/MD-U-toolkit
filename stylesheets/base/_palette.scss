@@ -1,0 +1,63 @@
+$UI-color-key: 'base' !default;
+
+$UI-colors: (
+  'primary': (
+    'base': #262d33,
+    'light': #eef0f2,
+    'dark': #1f2429
+  ),
+  'accent': (
+    'base': #ff4f40,
+    'light': #ff6e62,
+    'dark': #a60d00
+  ),
+  'secondary': (
+    'base': #80c449,
+    'light': #9bd06f,
+    'dark': #5f9831
+  ),
+  'foreground': (
+    'base': #262b31,
+    'light': #3c444e,
+    'dark': #171a1e,
+    'darker': #000000
+  ),
+  'background': (
+    'base': #e9e9e9,
+    'light': #fafafa,
+    'dark': #d8d8d8,
+    'lighter': #fff
+  )
+);
+
+$UI-opacity: (
+  'light': 0.8, // opacity used with lighter colors
+  'dark': 0.4,  // opacity used with darker colors
+);
+
+@function UI-color(
+  $name: 'primary',
+  $variant: $UI-color-key,
+  $opacity: 1,
+  $map: $UI-colors
+) {
+  $color: null;
+
+  // Get the color spectrum
+  $color-spectrum: map-get($UI-colors, $name);
+
+  // Get the color variant
+  @if $color-spectrum {
+    $color: map-get($color-spectrum, $variant);
+  }
+
+  // Get the alpha setting
+  $alpha: if(type-of($opacity) == 'number', $opacity, map-get($map, $opacity));
+
+  // Set the alpha of the color
+  @if $alpha {
+    $color: rgba($color, $alpha);
+  }
+
+  @return $color;
+}
