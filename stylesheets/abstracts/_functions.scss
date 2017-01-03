@@ -24,3 +24,7 @@
 
   @return $color;
 }
+
+@function conf($map, $prop) {
+  @return map-get($map, $prop);
+}
