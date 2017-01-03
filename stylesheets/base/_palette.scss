@@ -35,40 +35,40 @@ $UI-opacity: (
   'dark': 0.4,  // opacity used with darker colors
 );
 
-/*
+//
+//
+// https://material.io/guidelines/style/color.html#color-text-background-colors
+//
+// Dark text on light backgrounds
+//
+//    Dark text (#000000) Opacity
+//
+//    Primary text         87%
+//
+//    Secondary text       54%
+//
+//    Disabled text,     |
+//    hint text,         | 38%
+//    and icons          |
+//
+//    Dividers             12%
+//
+//
+// White text on dark backgrounds
+//
+//    Light text (#FFFFFF) Opacity
+//
+//    Primary text         100%
+//
+//    Secondary text       70%
+//
+//    Disabled text,     |
+//    hint text,         | 50%
+//    and icons          |
+//
+//    Dividers             12%
+//
 
- https://material.io/guidelines/style/color.html#color-text-background-colors
-
- Dark text on light backgrounds
-
-    Dark text (#000000) Opacity
-
-    Primary text         87%
-
-    Secondary text       54%
-
-    Disabled text,     |
-    hint text,         | 38%
-    and icons          |
-
-    Dividers             12%
-
-
- White text on dark backgrounds
-
-    Light text (#FFFFFF) Opacity
-
-    Primary text         100%
-
-    Secondary text       70%
-
-    Disabled text,     |
-    hint text,         | 50%
-    and icons          |
-
-    Dividers             12%
-
-*/
 
 $colors: (
   dark-text: (
@@ -77,9 +77,9 @@ $colors: (
     disabled: color('foreground', 'darker', $opacity: .38)
   ),
   light-text: (
-    primary: color('foreground', 'lighter'),
-    secondary: color('foreground', 'lighter', $opacity: .70),
-    disabled: color('foreground', 'lighter', $opacity: .50)
+    primary: color('background', 'lighter'),
+    secondary: color('background', 'lighter', $opacity: .70),
+    disabled: color('background', 'lighter', $opacity: .50)
   ),
   dividers: color('foreground', 'darker', $opacity: .12)
 );
