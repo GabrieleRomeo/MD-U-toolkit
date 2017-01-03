@@ -18,6 +18,9 @@ a {
 a img {
   border: none; }
 
+.l-container {
+  padding-left: 150px; }
+
 .c-sideNav {
   position: fixed;
   left: 0;
