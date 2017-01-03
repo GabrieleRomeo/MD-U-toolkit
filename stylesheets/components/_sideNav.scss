@@ -1,0 +1,7 @@
+.c-sideNav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: conf($conf-sideNav, 'width');
+  height: 100%;
+}
