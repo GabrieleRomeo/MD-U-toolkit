@@ -34,30 +34,3 @@ $UI-opacity: (
   'light': 0.8, // opacity used with lighter colors
   'dark': 0.4,  // opacity used with darker colors
 );
-
-@function UI-color(
-  $name: 'primary',
-  $variant: $UI-color-key,
-  $opacity: 1,
-  $map: $UI-colors
-) {
-  $color: null;
-
-  // Get the color spectrum
-  $color-spectrum: map-get($UI-colors, $name);
-
-  // Get the color variant
-  @if $color-spectrum {
-    $color: map-get($color-spectrum, $variant);
-  }
-
-  // Get the alpha setting
-  $alpha: if(type-of($opacity) == 'number', $opacity, map-get($map, $opacity));
-
-  // Set the alpha of the color
-  @if $alpha {
-    $color: rgba($color, $alpha);
-  }
-
-  @return $color;
-}
