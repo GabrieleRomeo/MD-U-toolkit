@@ -79,21 +79,32 @@ body {
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   display: flex;
+  position: relative;
   min-height: inherit; }
   .c-tab .l-grid {
     width: 100%;
     background-color: white; }
   .c-tab__divider {
+    display: flex;
+    justify-content: space-between;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
+  .c-tab__label {
+    align-self: center;
+    margin-right: 1em;
+    color: rgba(0, 0, 0, 0.38);
+    font-size: 1.7em; }
   .c-tab__list {
     display: flex; }
   .c-tab__item {
     position: relative;
     padding: 15px 20px;
-    border-right: 1px solid rgba(0, 0, 0, 0.12); }
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.12);
+    text-transform: capitalize; }
     .c-tab__item--isActive {
       top: 2px;
       margin-top: -2px;
+      color: initial;
       background: white; }
       .c-tab__item--isActive .c-tab__icon {
         color: #ff4f40 !important; }
