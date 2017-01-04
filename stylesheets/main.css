@@ -71,4 +71,32 @@ body {
     color: inherit;
     justify-content: space-between; }
 
+.c-tab {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  min-height: inherit; }
+  .c-tab .l-grid {
+    width: 100%;
+    background-color: white; }
+  .c-tab__divider {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
+  .c-tab__list {
+    display: flex; }
+  .c-tab__item {
+    position: relative;
+    padding: 15px 20px;
+    border-right: 1px solid rgba(0, 0, 0, 0.12); }
+    .c-tab__item--isActive {
+      top: 2px;
+      margin-top: -2px;
+      background: white; }
+      .c-tab__item--isActive .c-tab__icon {
+        color: #ff4f40 !important; }
+  .c-tab__content {
+    display: none;
+    padding: 20px; }
+    .c-tab__content--isActive {
+      display: block; }
+
 /*# sourceMappingURL=main.css.map */
