@@ -8,6 +8,13 @@
   }
 }
 
+/// @alias element
+
+@mixin e($element) {
+  @include element($element) {
+    @content;
+  }
+}
 
 /// Block Modifier
 /// @access public
@@ -15,6 +22,14 @@
 
 @mixin modifier($modifier) {
   &--#{$modifier} {
+    @content;
+  }
+}
+
+/// @alias element
+
+@mixin m($modifier) {
+  @include modifier($modifier) {
     @content;
   }
 }
