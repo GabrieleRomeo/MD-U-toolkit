@@ -38,7 +38,8 @@ $conf-title-family: conf($conf-title, 'font-family');
   @include e('button') {
       position:relative;
       width: 50%;
-      padding:5px 10px;
+      max-width: 300px;
+      padding: 10px;
       margin: 0 auto;
       background: color('secondary', 'alternative');
       color:#fff;

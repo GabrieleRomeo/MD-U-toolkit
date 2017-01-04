@@ -136,7 +136,8 @@ body {
 .c-upload__button {
   position: relative;
   width: 50%;
-  padding: 5px 10px;
+  max-width: 300px;
+  padding: 10px;
   margin: 0 auto;
   background: #00ad2d;
   color: #fff;
