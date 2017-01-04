@@ -18,3 +18,92 @@
     @content;
   }
 }
+
+
+/// Generate single side border [TOP-BOTTOM]
+///
+/// @param {Value} $properties - border-top, and border-bottom properties
+
+@mixin border-top-bottom($properties) {
+  border-top: $properties;
+  border-bottom: $properties;
+}
+
+
+/// Generate rounded borders
+///
+/// @param {Number} $radius - The shorthand to set the four properties
+///                           border-top-left-radius, border-top-right-radius,
+///                           border-bottom-right-radius and
+///                           border-bottom-left-radius respectively.
+
+@mixin border-radius($radius) {
+  @extend %bg-clip;
+  border-radius: $radius;
+}
+
+
+/// Generate single side border-radius [TOP]
+///
+/// @param {Number} $radius - The shorthand to set the two properties
+///                           border-top-right-radius, and border-top-left-radius
+///                           respectively.
+
+@mixin border-top-radius($radius) {
+  @extend %bg-clip;
+  border-top-right-radius: $radius;
+  border-top-left-radius: $radius;
+}
+
+
+/// Generate single side border-radius [RIGHT]
+///
+/// @param {Number} $radius - The shorthand to set the two properties
+///                           border-top-right-radius, and border-bottom-right-radius,
+///                           respectively.
+
+@mixin border-right-radius($radius) {
+  @extend %bg-clip;
+  border-bottom-right-radius: $radius;
+ border-top-right-radius: $radius;
+}
+
+
+/// Generate single side border-radius [BOTTOM]
+///
+/// @param {Number} $radius - The shorthand to set the two properties
+///                           border-bottom-right-radius, and border-bottom-left-radius,
+///                             respectively.
+
+@mixin border-bottom-radius($radius) {
+  @extend %bg-clip;
+  border-bottom-right-radius: $radius;
+  border-bottom-left-radius: $radius;
+}
+
+
+/// Generate single side border-radius [LEFT]
+///
+/// @param {Number} $radius - The shorthand to set the two properties
+///                           border-top-left-radius, and border-left-radius,
+///                           respectively.
+
+@mixin border-left-radius($radius) {
+  @extend %bg-clip;
+  border-bottom-left-radius: $radius;
+  border-top-left-radius: $radius;
+}
+
+
+/// Generate opposite side border-radius [TOP-LEFT & BOTTOM-RIGHT | TOP-RIGHT & BOTTOM LEFT]
+///
+/// @param {Number} $topLeftBottomRight - The TOP-LEFT & BOTTOM-RIGHT radius
+/// @param {Number} $topRightBottomLeft - TOP-RIGHT & BOTTOM LEFT radius
+
+@mixin border-opposite-radius($topLeftBottomRight, $topRightBottomLeft) {
+  @extend %bg-clip;
+  border-top-left-radius: $topLeftBottomRight;
+  border-bottom-right-radius: $topLeftBottomRight;
+  border-top-right-radius: $topRightBottomLeft;
+  border-bottom-left-radius: $topRightBottomLeft;
+}

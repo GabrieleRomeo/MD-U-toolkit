@@ -1,0 +1,51 @@
+
+$_border-properties: 1px solid conf($colors, 'dividers');
+
+.c-tab {
+    @include border-top-bottom($_border-properties);
+    display: flex;
+    min-height: inherit;
+
+    // Layout grid container
+    .l-grid {
+      width: 100%;
+      background-color: color('background', 'lighter');
+    }
+
+    // .c-tab__divider
+    @include element('divider') {
+      border-bottom: $_border-properties;
+    }
+
+    // .c-tab__list
+    @include element('list') {
+      display: flex;
+    }
+
+    // .c-tab__item
+    @include element('item') {
+      position: relative;
+      padding: 15px 20px;
+      border-right: $_border-properties;
+
+        @include modifier('isActive') {
+          top: 2px;
+          margin-top: -2px;
+          background: color('background', 'lighter');
+
+            .c-tab__icon {
+              color: color('accent') !important;
+            }
+        }
+    }
+
+    // .c-tab__content
+    @include element('content') {
+      display: none;
+      padding: 20px;
+
+        @include modifier('isActive') {
+          display: block;
+        }
+    }
+}
