@@ -1,7 +1,11 @@
-.c-sideNav__item, .c-sideNav__link {
+.c-sideNav__item, .c-sideNav__link, .c-upload__area {
   display: flex;
   flex-direction: column;
-  align-items: center; }
+  align-items: center;
+  justify-content: center; }
+
+.c-upload__input--file, .c-upload .c-file__icon--close {
+  cursor: pointer; }
 
 *, *:after, *:before {
   box-sizing: border-box;
@@ -98,5 +102,75 @@ body {
     padding: 20px; }
     .c-tab__content--isActive {
       display: block; }
+
+.c-upload__body {
+  display: flex; }
+.c-upload__title {
+  padding: 10px;
+  font-family: Rokkitt, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-align: center;
+  text-transform: capitalize; }
+  .c-upload__title--big {
+    font-size: 2em; }
+.c-upload__area {
+  height: 250px;
+  margin: 50px 20px;
+  background-color: #e9e9e9;
+  border: 3px dashed rgba(0, 0, 0, 0.12);
+  border-radius: 10px; }
+.c-upload__icon {
+  padding-bottom: 1em;
+  font-size: 1.5em !important;
+  color: #80c449; }
+.c-upload__button {
+  position: relative;
+  width: 50%;
+  padding: 5px 10px;
+  margin: 0 auto;
+  background: #00ad2d;
+  color: #fff;
+  border-radius: 2px;
+  text-align: center;
+  text-transform: capitalize; }
+.c-upload__input--file {
+  position: absolute;
+  z-index: 1000;
+  opacity: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100%; }
+.c-upload .c-file {
+  position: relative;
+  margin: 15px;
+  overflow-x: visible; }
+  .c-upload .c-file__name {
+    padding-right: 2em;
+    font-weight: 600; }
+  .c-upload .c-file__header {
+    padding-left: 30px; }
+  .c-upload .c-file__icon {
+    position: absolute;
+    top: 4px; }
+    .c-upload .c-file__icon--close {
+      right: 0; }
+  .c-upload .c-file__progressBar {
+    height: 5px;
+    margin: 10px 0;
+    background-color: rgba(0, 0, 0, 0.12); }
+    .c-upload .c-file__progressBar div {
+      height: inherit;
+      background-color: #ff4f40; }
+    .c-upload .c-file__progressBar div.p15 {
+      width: 15%; }
+    .c-upload .c-file__progressBar div.p85 {
+      width: 85%; }
+    .c-upload .c-file__progressBar div.p100 {
+      width: 100%;
+      background-color: #5f9831; }
+  .c-upload .c-file__footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: .7em; }
 
 /*# sourceMappingURL=main.css.map */

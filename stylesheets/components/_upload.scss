@@ -1,4 +1,120 @@
 
+
+$conf-title: conf($conf-upload, 'title');
+$conf-title-family: conf($conf-title, 'font-family');
+
 .c-upload {
-  
+
+  @include e('body') {
+    display: flex;
+  }
+
+  @include e('title') {
+    padding: 10px;
+    font-family: #{$conf-title-family};
+    text-align: center;
+    text-transform: capitalize;
+
+      @include m('big') {
+        font-size: 2em;
+      }
+  }
+
+  @include e('area') {
+    @extend %flex-column-centered;
+    height: 250px;
+    margin: 50px 20px;
+    background-color: color('background');
+    border: 3px dashed conf($colors, 'dividers');
+    border-radius: 10px;
+  }
+
+  @include e('icon') {
+    padding-bottom: 1em;
+    font-size: 1.5em !important;
+    color: color('secondary');
+  }
+
+  @include e('button') {
+      position:relative;
+      width: 50%;
+      padding:5px 10px;
+      margin: 0 auto;
+      background: color('secondary', 'alternative');
+      color:#fff;
+      border-radius:2px;
+      text-align:center;
+      text-transform: capitalize;
+  }
+
+  @include e('input') {
+
+    @include m('file') {
+      @extend %pointer;
+      position: absolute;
+      z-index: 1000;
+      opacity: 0;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+// -----------------------------------------------------------------------------
+//                                 FILE COMPONENT
+// -----------------------------------------------------------------------------
+
+  .c-file {
+    position: relative;
+    margin: 15px;
+    overflow-x: visible;
+
+    // .c-file__name
+    @include e('name') {
+      padding-right: 2em;
+      font-weight: 600;
+    }
+
+    // .c-file__header
+    @include e('header') {
+      padding-left: 30px;
+    }
+
+    // .c-file__icon
+    @include e('icon') {
+      position: absolute;
+      top: 4px;
+
+      @include m('close') {
+        @extend %pointer;
+        right: 0;
+      }
+    }
+
+    // .c-file__progressBar
+    @include e('progressBar') {
+      height: 5px;
+      margin: 10px 0;
+      background-color: conf($colors, 'dividers');
+
+        div {
+          height: inherit;
+          background-color: color('accent');
+        }
+        div.p15 { width: 15%; }
+        div.p85 { width: 85%; }
+        div.p100 {
+          width: 100%;
+          background-color: color('secondary', 'dark');
+        }
+    }
+
+    // .c-file__footer
+    @include e('footer') {
+      display: flex;
+      justify-content: space-between;
+      font-size: .7em;
+    }
+  }
 }
