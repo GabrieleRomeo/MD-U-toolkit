@@ -27,6 +27,7 @@ $conf-title-family: conf($conf-title, 'font-family');
     background-color: color('background');
     border: 3px dashed conf($colors, 'dividers');
     border-radius: 10px;
+    user-select: none;
   }
 
   @include e('icon') {
