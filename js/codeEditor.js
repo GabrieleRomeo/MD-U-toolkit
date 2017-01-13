@@ -1,8 +1,8 @@
 'use strict';
 
-var MD_Utoolkit =  MD_Utoolkit || {};
+var bov_Utoolkit =  bov_Utoolkit || {};
 
-MD_Utoolkit.namespace = function (name) {
+bov_Utoolkit.namespace = function (name) {
 
     var parts = name.split('.');
     var ns = this;
@@ -16,11 +16,11 @@ MD_Utoolkit.namespace = function (name) {
 };
 
 
-MD_Utoolkit.namespace('Utils').Selector = (function(win){
+bov_Utoolkit.namespace('utilities').Caret = (function(win){
+
     var doc = win.document;
 
-    var getSelected = function () {
-
+    function Caret() {
         var sel = '';
 
         if(win.getSelection){
@@ -31,15 +31,56 @@ MD_Utoolkit.namespace('Utils').Selector = (function(win){
             sel = doc.selection.createRange().text;
         }
 
-        return sel;
+        this.sel = sel;
+    }
+
+    Caret.prototype.getSelected = function() {
+        return this.sel;
     };
 
-    return {
-        getSelected: getSelected
+    /*
+     * Create a new Range representing the starting point of the provided node
+     * @param {HTML Node} node - The intended node
+     *
+     */
+    Caret.prototype.moveAtStart = function(node) {
+
+        var newRange = document.createRange();
+
+        newRange.setStart(node, 0);
+        // make it at a single point
+        newRange.collapse(true);
+
+        //make the cursor caret there
+        this.sel.removeAllRanges();
+        this.sel.addRange(newRange);
+
     };
+
+    /*
+     * Create a new Range representing the ending point of the provided node
+     * @param {HTML Node} node - The intended node
+     * @return {Range}
+     *
+     */
+    Caret.prototype.moveAtEnd = function(node) {
+
+        var newRange = document.createRange();
+
+        newRange.setStart(node, node.anchorNode.anchorOffset);
+        // make it at a single point
+        newRange.collapse(true);
+
+        //make the cursor caret there
+        this.sel.removeAllRanges();
+        this.sel.addRange(newRange);
+    };
+
+    return Caret;
 })(this);
 
-MD_Utoolkit.namespace('Utils').BEM = (function(win){
+// TODO: Remove this
+bov_Utoolkit.namespace('utilities').BEM = (function(win){
     var doc = win.document;
 
     var $ = function(parent) {
@@ -57,7 +98,7 @@ MD_Utoolkit.namespace('Utils').BEM = (function(win){
     };
 });
 
-MD_Utoolkit.namespace('Utils').DOM = (function(win){
+bov_Utoolkit.namespace('utilities').DOM = (function(win){
     var doc = win.document;
 
     var $ = function(selector) {
@@ -119,7 +160,7 @@ MD_Utoolkit.namespace('Utils').DOM = (function(win){
     };
 })(this);
 
-MD_Utoolkit.namespace('Utils.DOM').BEM = (function(){
+bov_Utoolkit.namespace('utilities.DOM').BEM = (function(){
 
     var BEM = function(parent) {
 
@@ -171,7 +212,7 @@ MD_Utoolkit.namespace('Utils.DOM').BEM = (function(){
     };
 })(this);
 
-MD_Utoolkit.namespace('Utils').ObjUtil = (function(win){
+bov_Utoolkit.namespace('utilities').obj = (function(win){
     // https://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
     var extend = function () {
 
@@ -223,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     document.execCommand('insertBrOnReturn', false, false);
 
     function CodeEditor(element, options) {
-        var objUtil = MD_Utoolkit.namespace('Utils').ObjUtil;
+        var objUtil = bov_Utoolkit.namespace('utilities').obj;
         this.element = element;
         this.settings = objUtil.extend({}, {
             blockName: '.c-codeEditor',
@@ -236,7 +277,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
         constructor: CodeEditor,
 
         init: function () {
-            var $ = MD_Utoolkit.namespace('Utils.DOM').BEM.$;
+            var $ = bov_Utoolkit.namespace('utilities.DOM').BEM.$;
+            var Caret = bov_Utoolkit.namespace('utilities').Caret;
 
             this.BEM = $(this.element);
             this.storage = sessionStorage;
@@ -245,7 +287,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
             this.codeArea = this.BEM('codeArea').node;
             this.mirrorArea = this.BEM('mirrorArea').node;
             this.footer = this.BEM('footer').node;
-            this.selector = MD_Utoolkit.namespace('Utils').Selector.getSelected();
+            this.caret = new Caret();
+            this.selector = this.caret.getSelected();
 
             this.observe();
             this.handleScroll();
@@ -338,7 +381,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                 var selRange = sel.getRangeAt(0);
                 var cloneRange;
-                var newRange;
 
                 var secondP;
                 var newElem;
@@ -358,8 +400,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 // ENTER
                 if (key === 13) {
                     docFragment = document.createDocumentFragment();
-
-
 
                     // Take a snapshot of the original selection range
                     cloneRange = selRange.cloneRange();
@@ -433,23 +473,14 @@ document.addEventListener('DOMContentLoaded', function (e) {
                             docFragment.appendChild(newElem);
 
                             focusElement = newElem;
-                            //target.parentNode.insertBefore(newElem, target.nextSibling);
                         }
                     }
 
                     // Replace the anchor node with the new HTML fragment
                     target.parentNode.replaceChild(docFragment, replaceNode);
 
-                    /*create a new range*/
-                    newRange = document.createRange();
-                    //
-                    newRange.setStart(focusElement, 0);
-                    // make it at a single point
-                    newRange.collapse(true);
-
-                    //make the cursor there
-                    sel.removeAllRanges();
-                    sel.addRange(newRange);
+                    //make the caret there
+                    self.caret.moveAtStart(focusElement);
 
                     // Scroll the code Area
                     this.scrollTop = this.scrollHeight;
@@ -524,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         range.deleteContents();
                     }
                 }
-console.log(anchorNode.textContent);
+
                 // Stop data actually being pasted
                 event.stopPropagation();
                 event.preventDefault();
@@ -684,17 +715,13 @@ console.log(anchorNode.textContent);
         },
 
         _addChild: function(target) {
+
             var emptyDIV = this._emptyDIV();
-            var sel = window.getSelection ? window.getSelection() : document.selection.createRange();
-            var range = document.createRange();
 
             target.appendChild(emptyDIV);
-            range.setStart(emptyDIV, 0);
-            range.collapse(true);
 
             //make the cursor there
-            sel.removeAllRanges();
-            sel.addRange(range);
+            this.caret.moveAtStart(emptyDIV);
         },
 
         _emptyDIV: function() {
