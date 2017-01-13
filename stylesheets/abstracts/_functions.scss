@@ -7,7 +7,7 @@
   $color: null;
 
   // Get the color spectrum
-  $color-spectrum: map-get($UI-colors, $name);
+  $color-spectrum: map-get($map, $name);
 
   // Get the color variant
   @if $color-spectrum {
@@ -27,4 +27,13 @@
 
 @function conf($map, $prop) {
   @return map-get($map, $prop);
+}
+
+/// Check if the provided parameter is a map
+///
+/// @param {Value} $obj - The value to check
+/// @return {Boolean}
+
+@function is-map($map) {
+  @return type-of($map) == 'map';
 }
