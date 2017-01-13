@@ -79,25 +79,6 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
     return Caret;
 })(this);
 
-// TODO: Remove this
-bov_Utoolkit.namespace('utilities').BEM = (function(win){
-    var doc = win.document;
-
-    var $ = function(parent) {
-        var baseClassName = parent.classList[0] || '';
-        return function(element, modifier) {
-
-            var selector = '.' + baseClassName + '__' + element;
-
-            if (modifier) {
-                selector += '--' + modifier;
-            }
-
-            return parent.querySelector(selector);
-        };
-    };
-});
-
 bov_Utoolkit.namespace('utilities').DOM = (function(win){
     var doc = win.document;
 
