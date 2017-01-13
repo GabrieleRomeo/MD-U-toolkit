@@ -151,9 +151,181 @@
                       </ul>
                     </div>
                   </div>
-
                 </div>
                 <!-- End File Upload -->
+
+                <!-- Start editor -->
+
+
+<div class="c-codeEditor c-codeEditor--black" id="c-editor">
+  <textarea class="c-codeEditor__mirrorArea" style="display: none"></textarea>
+  <div class="c-codeEditor__header">
+  </div>
+  <div class="c-codeEditor__body">
+    <div class="c-codeEditor__gutter">
+      <ul class="c-codeEditor__gutterList">
+        <li class="c-codeEditor__gutterLine"></li>
+      </ul>
+    </div>
+    <div class="c-codeEditor__codeArea" tabindex="0" contenteditable="true">
+    </div>
+  </div>
+  <div class="c-codeEditor__footer">
+    <div class="c-codeEditor__info"></div>
+  </div>
+</div>
+
+
+<!--
+<div class="c-editor" id="c-editor">
+    <textarea id="html-source" name="html-source" style="display: none;"></textarea>
+    <div class="c-codeMirror c-codeMirror--black">
+        <div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 233.391px; left: 256.391px;">
+            <textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea>
+        </div>
+        <div class="c-codeMirror__hscrollbar" style="left: 34px; min-height: 18px;">
+            <div style="height: 100%; min-height: 1px; width: 0px;"></div>
+        </div>
+        <div class="c-codeMirror__vscrollbar" style="min-width: 18px; display: block; bottom: 0px;">
+            <div style="min-width: 1px;height: 450px;"></div>
+        </div>
+        <div class="c-codeMirror__codeArea" contenteditable="true">
+          <div class="c-codeMirror__sizer" tabindex="-1" style="margin-left: 34px; min-height: 450px;">
+              <div style="position: relative; top: 0px;">
+                  <div class="c-codeMirror__lines">
+                      <div style="position: relative; outline: none;">
+                          <div class="c-codeMirror__measure"></div>
+                          <div style="position: relative; z-index: 1; display: none;"></div>
+                          <div class="c-codeMirror__code">
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">1</div>
+                                  </div><pre><span class="cm-meta">&lt;!DOCTYPE html&gt;</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">2</div>
+                                  </div><pre><span class="cm-tag">&lt;html&gt;</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">3</div>
+                                  </div><pre><span class="cm-tag">&lt;head&gt;</span>aaaaa</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">4</div>
+                                  </div><pre><span class="cm-tag">&lt;title&gt;</span>HTML5, CSS3 and JavaScript demo<span class="cm-tag">&lt;/title&gt;</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">5</div>
+                                  </div><pre><span class="cm-tag">&lt;/head&gt;</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">6</div>
+                                  </div><pre><span class="cm-tag">&lt;body&gt;</span>fddffdddffddffddffd</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">7</div>
+                                  </div><pre><span class="cm-comment">&lt;!--</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">8</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">9</div>
+                                  </div><pre><span class="cm-comment">Start your code here --&gt;</span>ssssssssssssssssssssssssssssskjhjkkjkljjkl</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">10</div>
+                                  </div><pre> &nbsp; &nbsp; &nbsp;  </pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">11</div>
+                                  </div><pre><span class="cm-tag">&lt;p</span> <span class="cm-attribute">class</span><span class="cm-equals">=</span><span class="cm-string">"lw"</span><span class="cm-tag">&gt;</span>Hello Weaver!<span class="cm-tag">&lt;/p&gt;</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">12</div>
+                                  </div><pre>dddddcc</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">13</div>
+                                  </div><pre><span class="cm-comment">&lt;!-- End your code here --&gt;</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">14</div>
+                                  </div><pre><span class="cm-tag">&lt;/body&gt;</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">15</div>
+                                  </div><pre><span class="cm-tag">&lt;/html&gt;</span></pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">16</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">17</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">18</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">19</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">20</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">21</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">22</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                              <div style="position: relative;">
+                                  <div class="c-codeMirror__gutterLine">
+                                      <div class="c-codeMirror__lineNumber">23</div>
+                                  </div><pre>&nbsp;</pre>
+                              </div>
+                          </div>
+                          <div class="c-codeMirror__cursor" style="left: 216px; top: 229px; height: 17px;">&nbsp;</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="c-codeMirror__gutter">
+          </div>
+        </div>
+    </div>
+    <span class="html-logo" id="html-mode" style="display: block;"></span>
+    <a id="fullscreen-html-toggle"><span class="fullscreen-small" id="fullscreen-html"></span></a>
+</div>
+                <!-- end editor -->
 
               </div>
               <div class="c-tab__content">
@@ -170,6 +342,8 @@
         <div class="l-container">
         </div>
       </footer>
+
+      <script src="js/codeEditor.js"
 
     </body>
 </html>
