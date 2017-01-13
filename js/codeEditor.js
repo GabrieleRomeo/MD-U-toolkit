@@ -47,7 +47,7 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
 
         var newRange = document.createRange();
 
-        newRange.setStart(node, 0);
+        newRange.setStartBefore(node);
         // make it at a single point
         newRange.collapse(true);
 
@@ -67,13 +67,24 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
 
         var newRange = document.createRange();
 
-        newRange.setStart(node, node.anchorNode.anchorOffset);
+        newRange.setStartAfter(node);
+
         // make it at a single point
         newRange.collapse(true);
 
         //make the cursor caret there
         this.sel.removeAllRanges();
         this.sel.addRange(newRange);
+    };
+
+    /*
+     * Return a Range object representing one of the ranges currently selected
+     * @param {number} index - The zero-based index of the range to return
+     * @return {Range}
+     *
+     */
+    Caret.prototype.getRangeAt = function(index) {
+        return this.sel.getRangeAt(index);
     };
 
     return Caret;
@@ -513,6 +524,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 var pastedData;
                 var pastedLines;
                 var selRange;
+                var focusElement;
 
                 var anchorNode = selection.anchorNode;
 
@@ -566,13 +578,12 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     }
                 });
 
-                if (range.commonAncestorContainer === this) {
-                    anchorNode.appendChild(fragment);
-                } else {
-                    anchorNode.parentNode.replaceChild(fragment, anchorNode);
-                    //self._insterAfter(fragment, anchorNode);
-                }
+                focusElement = fragment.childNodes[fragment.childElementCount-1];
 
+                // Replace the current node withe the new HTML fragment
+                anchorNode.parentNode.replaceChild(fragment, anchorNode);
+
+                self.caret.moveAtEnd(focusElement);
 
             }, false);
         },
