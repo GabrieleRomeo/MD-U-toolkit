@@ -47,7 +47,7 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
 
         var newRange = document.createRange();
 
-        newRange.setStartBefore(node);
+        newRange.setStart(node, 0);
         // make it at a single point
         newRange.collapse(true);
 
@@ -67,8 +67,7 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
 
         var newRange = document.createRange();
 
-        newRange.setStartAfter(node);
-
+        newRange.setStart(node, node.textContent.length);
         // make it at a single point
         newRange.collapse(true);
 
@@ -472,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                     target.parentNode.replaceChild(docFragment, replaceNode);
 
                     //make the caret there
-                    self.caret.moveAtStart(focusElement);
+                    self.caret.moveAtEnd(focusElement);
 
                     // Scroll the code Area
                     this.scrollTop = this.scrollHeight;
@@ -580,10 +579,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                 focusElement = fragment.childNodes[fragment.childElementCount-1];
 
-                // Replace the current node withe the new HTML fragment
+                // Replace the current node with the new HTML fragment
                 anchorNode.parentNode.replaceChild(fragment, anchorNode);
 
-                self.caret.moveAtEnd(focusElement);
+                self.caret.moveAtStart(focusElement);
 
             }, false);
         },
