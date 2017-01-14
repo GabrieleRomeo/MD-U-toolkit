@@ -147,11 +147,6 @@ $footer-height: map-get($UI-editor, footerHeight);
     @include e(codeArea) {
       width: calc(100% - #{$gutter-width});
       overflow: auto;
-      white-space: nowrap;
-
-        div {
-          padding-left: 3px;
-        }
     }
 
   @include themefy($UI-editor);

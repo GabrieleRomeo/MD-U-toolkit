@@ -259,7 +259,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
         this.element = element;
         this.settings = objUtil.extend({}, {
             blockName: '.c-codeEditor',
-            highlightActiveLine: false
+            highlightActiveLine: false,
+            codeEditor: true
         }, options || {});
         this.init();
     }
@@ -270,24 +271,37 @@ document.addEventListener('DOMContentLoaded', function (e) {
         init: function () {
             var $ = bov_Utoolkit.namespace('utilities.DOM').BEM.$;
             var Caret = bov_Utoolkit.namespace('utilities').Caret;
+            var temp = '';
 
             this.BEM = $(this.element);
             this.storage = sessionStorage;
 
-            this.gutter = this.BEM('gutterList').node;
+            this.gutter = this.BEM('gutter').node;
+            this.gutterList = this.BEM('gutterList').node;
             this.codeArea = this.BEM('codeArea').node;
             this.mirrorArea = this.BEM('mirrorArea').node;
             this.footer = this.BEM('footer').node;
             this.caret = new Caret();
             this.selector = this.caret.getSelected();
 
-            this.observe();
-            this.handleScroll();
-            this.handleMouseLeave();
-            this.handleKeyDown();
-            this.handleKeyUp();
-            this.handleClick();
-            this.handlePaste();
+            // Activate the Code Editor only when it is required
+            if (this.settings['codeEditor']) {
+                this.codeArea.style.whiteSpace = 'nowrap';
+                this.observe();
+                this.handleScroll();
+                this.handleMouseLeave();
+                this.handleKeyDown();
+                this.handleKeyUp();
+                this.handleClick();
+                this.handlePaste();
+            } else {
+                // Hide the Gutter by setting its background color the same
+                // as the Code Area and change their widths
+                temp = this._getComputed(this.codeArea);
+                this.gutter.style.backgroundColor = temp('background-color');
+                this.gutter.style.width = '10px';
+                this.codeArea.style.width = 'calc(100% - 10px)';
+            }
 
             // Trigger a click event on the coding Area to activate
             // the editor's tracking system
@@ -590,7 +604,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         scrollGutter: function(offsetTop) {
             offsetTop = offsetTop || this.codeArea.scrollTop;
 
-            this.gutter.style.bottom = offsetTop + 'px';
+            this.gutterList.style.bottom = offsetTop + 'px';
         },
 
         updateGutter: function() {
@@ -605,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 gutterLines += '<li class="c-codeEditor__gutterLine"></li>';
             });
 
-            this.gutter.innerHTML = gutterLines;
+            this.gutterList.innerHTML = gutterLines;
         },
 
         updateFooterInfo: function() {
@@ -661,7 +675,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
         highlightLine: function(index /* optional */) {
 
-            var gutter = this.gutter;
+            var gutter = this.gutterList;
             var children = gutter.children;
 
             // active Gutter Line (if any)
@@ -717,8 +731,15 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
         _emptyDIV: function() {
             var div = document.createElement('DIV');
+            div.setAttribute('style', 'padding-left: 3px');
             div.appendChild(document.createElement('BR'));
             return div;
+        },
+
+        _getComputed: function(element) {
+            return function(property) {
+                return window.getComputedStyle(element, null).getPropertyValue(property);
+            };
         },
 
         _toArray: function(obj) {
