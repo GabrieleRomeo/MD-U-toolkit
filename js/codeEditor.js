@@ -159,11 +159,20 @@ bov_Utoolkit.namespace('utilities').DOM = (function(win){
 
 bov_Utoolkit.namespace('utilities.DOM').BEM = (function(){
 
+    /**
+     * Get the closest matching element up the DOM tree.
+     * @param  {String} parent  String that specifies the chain of selectors.
+     * @return {function(element, modifier)} Returns a function which get a string
+                                             for the element's name and an optional
+                                             modifier's name and returns an object
+                                             containing BEM information and the
+                                             catched HTML Node (if any)
+     */
     var BEM = function(parent) {
 
         var block = parent.classList[0] || '';
 
-        return function(element, modifier) {
+        return function(element, modifier /*optional*/) {
 
             var BEMselector = block + '__' + element;
 
@@ -181,6 +190,15 @@ bov_Utoolkit.namespace('utilities.DOM').BEM = (function(){
         };
     };
 
+/**
+     * Get the closest matching element up the DOM tree.
+     * @param  {String} parent  String that specifies the chain of selectors.
+     * @return {function(element, modifier)} Returns a function which get a string
+                                             for the element's name and an optional
+                                             modifier's name and returns an object
+                                             containing BEM information and the
+                                             catched HTML Node List
+     */
     var BEM$ = function(parent) {
 
         var block = parent.classList[0] || '';
