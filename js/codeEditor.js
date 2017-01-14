@@ -90,62 +90,30 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
 })(this);
 
 bov_Utoolkit.namespace('utilities').DOM = (function(win){
+
     var doc = win.document;
 
+    /**
+     * Get the closest matching element up the DOM tree.
+     * @param  {String} selector  String that specifies the chain of selectors.
+     * @return {Node} Returns the first matching node if found, else returns null.
+     */
     var $ = function(selector) {
         return doc.querySelector(selector);
-    };
-    var $$ = function(selector) {
-        return doc.querySelectorAll(selector);
-    };
-
-    var BEM = function(parent) {
-
-        var block = parent.classList[0] || '';
-
-        return function(element, modifier) {
-
-            var selector = block + '__' + element;
-
-            if (modifier) {
-                selector += '--' + modifier;
-            }
-
-            return {
-                node: parent.querySelector('.' + selector),
-                block: block,
-                element: element,
-                modifier: modifier,
-                selector: selector
-            };
-        };
-    };
-
-    var BEM$ = function(parent) {
-
-        var block = parent.classList[0] || '';
-
-        return function(element, modifier) {
-
-            var selector = block + '__' + element;
-
-            if (modifier) {
-                selector += '--' + modifier;
-            }
-
-            return {
-                node: parent.querySelectorAll('.' + selector),
-                block: block,
-                element: element,
-                modifier: modifier,
-                selector: selector
-            };
-        };
     };
 
     /**
      * Get the closest matching element up the DOM tree.
-     * @private
+     * @param  {String} selector  String that specifies the chain of selectors.
+     * @return {NodeList} Returns a NodeList collection filled with the matching
+                                    elements in source order
+     */
+    var $$ = function(selector) {
+        return doc.querySelectorAll(selector);
+    };
+
+    /**
+     * Get the closest matching element up the DOM tree.
      * @param  {Element} elem     Starting element
      * @param  {String}  selector Selector to match notwithstanding
      * @return {Boolean|Element}  Returns null if not match found
@@ -185,9 +153,7 @@ bov_Utoolkit.namespace('utilities').DOM = (function(win){
     return {
         $: $,
         $$: $$,
-        getClosest: getClosest,
-        BEM: BEM,
-        BEM$: BEM$
+        getClosest: getClosest
     };
 })(this);
 
