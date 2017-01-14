@@ -86,6 +86,26 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
         return this.sel.getRangeAt(index);
     };
 
+    Caret.prototype.cutRemainingText = function(anchorNode) {
+
+        var selRange;
+        var remainingTxt = '';
+
+        if (this.sel.rangeCount) {
+            selRange = this.sel.getRangeAt(0);
+
+            if (anchorNode) {
+                var range = selRange.cloneRange();
+                range.selectNodeContents(anchorNode);
+                range.setStart(selRange.endContainer, selRange.endOffset);
+                remainingTxt = range.extractContents();
+                range.deleteContents();
+            }
+        }
+
+        return remainingTxt;
+    };
+
     return Caret;
 })(this);
 
@@ -545,58 +565,40 @@ document.addEventListener('DOMContentLoaded', function (e) {
             var selection = self.selector;
 
             this.codeArea.addEventListener('paste', function(event) {
+
                 var clipboardData;
                 var pastedData;
                 var pastedLines;
-                var selRange;
                 var focusElement;
-
-                var anchorNode = selection.anchorNode;
-
-
+                var anchorNode = self.DOM.getClosest(selection.anchorNode, 'div');
                 var fragment = document.createDocumentFragment();
-                var other = '';
+                var remainingTxt = '';
 
+                // Get the text after the current cursor caret's position
+                remainingTxt = self.caret.cutRemainingText(anchorNode);
 
-                if (anchorNode.nodeType === 3) {
-                    anchorNode = anchorNode.parentNode;
-                }
-
-                if (selection.rangeCount) {
-                    selRange = selection.getRangeAt(0);
-
-                    if (anchorNode) {
-                        var range = selRange.cloneRange();
-                        range.selectNodeContents(anchorNode);
-                        range.setStart(selRange.endContainer, selRange.endOffset);
-                        other = range.extractContents();
-                        range.deleteContents();
-                    }
-                }
-
-                // Stop data actually being pasted
-                event.stopPropagation();
-                event.preventDefault();
-
+                // Get data from the clipboard
                 clipboardData = event.clipboardData || window.clipboardData;
                 pastedData = clipboardData.getData('text');
-
                 pastedLines = pastedData.split('\n');
 
-                if (other.textContent.trim() !== '') {
-                    pastedLines.push(other.textContent);
+                // When the remaining text it's not empty, add it at the end
+                // of the pastedLines Array
+                if (remainingTxt.textContent.trim() !== '') {
+                    pastedLines.push(remainingTxt.textContent);
                 }
 
                 pastedLines.forEach(function(line, index) {
                     var element = document.createElement('div');
                     var textContent = line.replace(/ /g, '\u00a0');
 
+                    // The FIRST LINE must include the first part of current line
+                    // (without the Remaining text) + the clipboard content
                     if (index === 0) {
                         element.textContent = anchorNode.textContent + textContent;
                     } else {
                         element.textContent = line.replace(/ /g, '\u00a0');
                     }
-
 
                     if (element.textContent.trim() !== '') {
                         fragment.appendChild(element);
@@ -608,7 +610,11 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 // Replace the current node with the new HTML fragment
                 anchorNode.parentNode.replaceChild(fragment, anchorNode);
 
-                self.caret.moveAtStart(focusElement);
+                self.caret.moveAtEnd(focusElement);
+
+                // Stop data actually being pasted
+                event.stopPropagation();
+                event.preventDefault();
 
             }, false);
         },
