@@ -67,7 +67,7 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
 
         var newRange = document.createRange();
 
-        newRange.setStart(node, node.textContent.length);
+        newRange.setStart(node.firstChild, node.firstChild.textContent.length);
         // make it at a single point
         newRange.collapse(true);
 
@@ -143,9 +143,49 @@ bov_Utoolkit.namespace('utilities').DOM = (function(win){
         };
     };
 
+    /**
+     * Get the closest matching element up the DOM tree.
+     * @private
+     * @param  {Element} elem     Starting element
+     * @param  {String}  selector Selector to match notwithstanding
+     * @return {Boolean|Element}  Returns null if not match found
+     */
+    var getClosest = function ( elem, selector ) {
+
+        // When elem is a Text node, get its parent node
+        if (elem.nodeType === 3) {
+            elem = elem.parentNode;
+        }
+
+        // Element.matches() polyfill
+        if (!Element.prototype.matches) {
+            Element.prototype.matches =
+                Element.prototype.matchesSelector ||
+                Element.prototype.mozMatchesSelector ||
+                Element.prototype.msMatchesSelector ||
+                Element.prototype.oMatchesSelector ||
+                Element.prototype.webkitMatchesSelector ||
+                function(s) {
+                    var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                        i = matches.length;
+                    while (--i >= 0 && matches.item(i) !== this) {}
+                    return i > -1;
+                };
+        }
+
+        // Get closest match
+        for ( ; elem && elem !== document; elem = elem.parentNode ) {
+            if ( elem.matches( selector ) ) return elem;
+        }
+
+        return null;
+
+    };
+
     return {
         $: $,
         $$: $$,
+        getClosest: getClosest,
         BEM: BEM,
         BEM$: BEM$
     };
@@ -274,6 +314,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             var temp = '';
 
             this.BEM = $(this.element);
+            this.DOM = bov_Utoolkit.namespace('utilities.DOM');
             this.storage = sessionStorage;
 
             this.gutter = this.BEM('gutter').node;
@@ -367,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         return node.tagName === 'DIV';
                     });
                     if (list.length === 0) {
-                        self._addChild(this);
+                        self._addEmptyLine(this);
                     }
                 }
 
@@ -380,21 +421,22 @@ document.addEventListener('DOMContentLoaded', function (e) {
         handleKeyDown: function() {
             var self = this;
             var sel = this.selector;
+            var DOM = this.DOM;
 
             this.codeArea.addEventListener('keydown', function(event) {
+
                 var key;
 
                 var selRange = sel.getRangeAt(0);
                 var cloneRange;
+                var line1;
+                var line2;
 
-                var secondP;
-                var newElem;
+                var remainingTxt;
                 var contentLength;
-                var firstElem;
+                var oldContent;
 
                 var target;
-                var replaceNode;
-                var focusElement;
                 var docFragment;
 
                 event = event || window.event;
@@ -411,81 +453,67 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                     contentLength = sel.anchorNode.length;
 
-
                     cloneRange.setStart(sel.anchorNode, sel.anchorOffset);
                     cloneRange.setEnd(sel.anchorNode, contentLength);
 
-                    secondP = cloneRange.toString();
+                    remainingTxt = cloneRange.toString();
 
 
-                    newElem = document.createElement('div');
-                    firstElem = document.createElement('div');
+                    // Select the closes parent DIV
+                    target = DOM.getClosest(sel.anchorNode, 'div');
 
+                    oldContent = sel.anchorNode.textContent;
 
-                    if (secondP.length > 0) {
-                        newElem.textContent = secondP;
-                    } else {
-                        newElem.appendChild(document.createElement('br'));
-                    }
+                    // The cursor caret is within an empty DIV
+                    if (oldContent.length === 0) {
 
+                        line1 = self._newLine(document.createElement('BR'));
+                        line2 = self._newLine(document.createElement('BR'));
 
-                    target = sel.anchorNode;
+                    } else if (oldContent.length === remainingTxt.length) {
 
-                    if (target.parentElement === this) {
+                        // The caret is positioned at the beginning of the line
+                        // For example :
+                        //                  |text inside the code area
 
-                        firstElem = document.createElement('div');
-                        firstElem.textContent = sel.anchorNode.textContent;
-
-                        if (sel.anchorNode.textContent.length === 0) {
-                            firstElem.appendChild(document.createElement('br'));
-                        }
-
-                        docFragment.appendChild(firstElem);
-                        docFragment.appendChild(newElem);
-
-                        focusElement = newElem;
-
-                        replaceNode = sel.anchorNode;
+                        line1 = self._newLine(document.createElement('BR'));
+                        line2 = self._newLine(document.createTextNode(oldContent));
 
                     } else {
 
-                        target = target.parentElement;
-                        replaceNode = sel.anchorNode.parentNode;
+                        // The caret is positioned somewhere between the current
+                        // text line
+                        // For example :
+                        //                  text |inside the code area
 
-                        if (secondP.length === contentLength) {
-                            var empty = self._emptyDIV();
+                        // Delete the second part of the string after the caret'
+                        // position.
+                        // Its content has been saved inside the remainingTxt variable
+                        cloneRange.deleteContents();
 
-                            firstElem = document.createElement('div');
-                            firstElem.textContent = sel.anchorNode.textContent;
 
-                            docFragment.appendChild(empty);
-                            docFragment.appendChild(firstElem);
+                        line1 = self._newLine(document.createTextNode(sel.anchorNode.textContent));
 
-                            focusElement = firstElem;
-
+                        if (remainingTxt.length !== 0) {
+                            // When the caret is positioned somewhere between the
+                            // text, add the remaining text to the line 2
+                            line2 = self._newLine(document.createTextNode(remainingTxt));
                         } else {
-                            // The caret is positioned at least between two characthers
-
-                            // Delete the second part of the string after the caret
-                            // because its content has been saved inside the secondP
-                            // variable
-                            cloneRange.deleteContents();
-
-                            firstElem = document.createElement('div');
-                            firstElem.textContent = sel.anchorNode.textContent;
-
-                            docFragment.appendChild(firstElem);
-                            docFragment.appendChild(newElem);
-
-                            focusElement = newElem;
+                            // When the caret is positioned at the end of the text
+                            // add a new line break
+                            line2 = self._newLine(document.createElement('BR'));
                         }
+
                     }
+
+                    docFragment.appendChild(line1);
+                    docFragment.appendChild(line2);
 
                     // Replace the anchor node with the new HTML fragment
-                    target.parentNode.replaceChild(docFragment, replaceNode);
+                    target.parentNode.replaceChild(docFragment, target);
 
                     //make the caret there
-                    self.caret.moveAtEnd(focusElement);
+                    self.caret.moveAtStart(line2);
 
                     // Scroll the code Area
                     this.scrollTop = this.scrollHeight;
@@ -519,7 +547,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 this.focus();
 
                 if (length === 0) {
-                    self._addChild(this);
+                    self._addEmptyLine(this);
                 }
 
                 // Update visual information
@@ -719,20 +747,36 @@ document.addEventListener('DOMContentLoaded', function (e) {
             referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
         },
 
-        _addChild: function(target) {
+        _addEmptyLine: function(target) {
 
-            var emptyDIV = this._emptyDIV();
+            var newLine = this._newLine(document.createElement('BR'));
 
-            target.appendChild(emptyDIV);
+            target.appendChild(newLine);
 
             //make the cursor there
-            this.caret.moveAtStart(emptyDIV);
+            this.caret.moveAtStart(newLine);
         },
 
-        _emptyDIV: function() {
+        /**
+         * Create a new line
+         *
+         * @param {Value} content The content for the new Line
+         *
+         * @returns {HTMLElement}
+         *
+         */
+
+        _newLine: function(content) {
+
             var div = document.createElement('DIV');
+
+            div.setAttribute('class', 'codeLine');
             div.setAttribute('style', 'padding-left: 3px');
-            div.appendChild(document.createElement('BR'));
+
+            if (content) {
+                div.appendChild(content);
+            }
+
             return div;
         },
 
@@ -754,3 +798,4 @@ document.addEventListener('DOMContentLoaded', function (e) {
         });
     })(e);
 });
+
