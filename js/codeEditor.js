@@ -89,7 +89,7 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
     Caret.prototype.cutRemainingText = function(anchorNode) {
 
         var selRange;
-        var remainingTxt = '';
+        var remainingTxt = null;
 
         if (this.sel.rangeCount) {
             selRange = this.sel.getRangeAt(0);
@@ -103,7 +103,7 @@ bov_Utoolkit.namespace('utilities').Caret = (function(win){
             }
         }
 
-        return remainingTxt;
+        return remainingTxt.textContent || '';
     };
 
     return Caret;
@@ -431,13 +431,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                 var key;
 
-                var selRange = sel.getRangeAt(0);
-                var cloneRange;
                 var line1;
                 var line2;
 
                 var remainingTxt;
-                var contentLength;
                 var oldContent;
 
                 var target;
@@ -450,23 +447,16 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                 // ENTER
                 if (key === 13) {
+
                     docFragment = document.createDocumentFragment();
-
-                    // Take a snapshot of the original selection range
-                    cloneRange = selRange.cloneRange();
-
-                    contentLength = sel.anchorNode.length;
-
-                    cloneRange.setStart(sel.anchorNode, sel.anchorOffset);
-                    cloneRange.setEnd(sel.anchorNode, contentLength);
-
-                    remainingTxt = cloneRange.toString();
-
 
                     // Select the closes parent DIV
                     target = DOM.getClosest(sel.anchorNode, 'div');
 
                     oldContent = sel.anchorNode.textContent;
+
+                    // Get the text after the current cursor caret's position
+                    remainingTxt = self.caret.cutRemainingText(target);
 
                     // The cursor caret is within an empty DIV
                     if (oldContent.length === 0) {
@@ -489,12 +479,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         // text line
                         // For example :
                         //                  text |inside the code area
-
-                        // Delete the second part of the string after the caret'
-                        // position.
-                        // Its content has been saved inside the remainingTxt variable
-                        cloneRange.deleteContents();
-
 
                         line1 = self._newLine(document.createTextNode(sel.anchorNode.textContent));
 
@@ -584,8 +568,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
                 // When the remaining text it's not empty, add it at the end
                 // of the pastedLines Array
-                if (remainingTxt.textContent.trim() !== '') {
-                    pastedLines.push(remainingTxt.textContent);
+                if (remainingTxt.trim() !== '') {
+                    pastedLines.push(remainingTxt);
                 }
 
                 pastedLines.forEach(function(line, index) {
