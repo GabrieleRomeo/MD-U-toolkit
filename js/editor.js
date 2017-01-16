@@ -554,7 +554,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         var objUtil = bov_Utoolkit.namespace('utilities').obj;
         this.element = element;
         this.settings = objUtil.extend({}, {
-            blockName: '.c-editor',
+            blockName: 'c-editor',
             highlightActiveLine: false,
             codeEditor: true
         }, options || {});
@@ -876,13 +876,14 @@ document.addEventListener('DOMContentLoaded', function (e) {
         updateGutter: function() {
             var list = [].slice.call(this.codeArea.childNodes);
             var gutterLines = '';
+            var baseComponent = this.settings['blockName'];
 
             list.filter(function(node) {
                 return node.tagName === 'DIV';
             }).map(function(node) {
                 return node.innerHTML;
             }).forEach(function() {
-                gutterLines += '<li class="c-codeEditor__gutterLine"></li>';
+                gutterLines += '<li class="' + baseComponent +'__gutterLine"></li>';
             });
 
             this.gutterList.innerHTML = gutterLines;
@@ -1030,7 +1031,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
     };
 
     (function(e) {
-        var list = [].slice.call(document.querySelectorAll('.c-codeEditor'));
+        var list = [].slice.call(document.querySelectorAll('.c-editor'));
         list.forEach(function(editor) {
            var c = new Editor(editor);
         });
