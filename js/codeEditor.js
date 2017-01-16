@@ -210,7 +210,7 @@ bov_Utoolkit.namespace('utilities.DOM').BEM = (function(){
         };
     };
 
-/**
+    /**
      * Get the closest matching element up the DOM tree.
      * @param  {String} parent  String that specifies the chain of selectors.
      * @return {function(element, modifier)} Returns a function which get a string
@@ -248,6 +248,14 @@ bov_Utoolkit.namespace('utilities.DOM').BEM = (function(){
 })(this);
 
 bov_Utoolkit.namespace('utilities').obj = (function(win){
+
+    // A list of available message severities
+    var msgSeverities = {
+        'error': 0,
+        'warning': 1,
+        'info': 2
+    };
+
     // https://gomakethings.com/vanilla-javascript-version-of-jquery-extend/
     var extend = function () {
 
@@ -286,8 +294,252 @@ bov_Utoolkit.namespace('utilities').obj = (function(win){
 
     };
 
+    /**
+     * Check if the provided object contains a specific value [recursive]
+     * @param  {Object} obj  An Object
+     * @param  {Value} value The value you are looking for
+     * @return {Boolean} True | False
+     */
+    function hasValue(obj, value) {
+        for (var p in obj) {
+            if (Object.prototype.toString.call(obj[p]) === '[object Object]') {
+                return hasValue(obj[p], value);
+            }
+            if (obj[p] === value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if the provided object contains a specific value [recursive] and
+     * return the first associated key that matches (if any). Null otherwise
+     * @param  {Object} obj  An Object
+     * @param  {Value} value The value of the Key that you are looking for
+     * @return {Value| null}
+     */
+    function getKeyFromValue(obj, value) {
+        for (var p in obj) {
+            if (Object.prototype.toString.call(obj[p]) === '[object Object]') {
+                return getKeyFromValue(obj[p], value);
+            }
+            if (obj[p] === value) {
+                return p;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Create a new Message Object
+     * @constructor
+     * @param  {String} message A textual message
+     * @param  {Int} severity The message's severity level
+     * @param  {Int} line An optional line number
+     * @return {Boolean} True | False
+     */
+    function Message(message, severity, line /*optional*/) {
+        this.message = message;
+        this.severity = (severity && hasValue(msgSeverities, severity)) ? severity : 1;
+        this.line = line;
+
+        this.render = function() {
+
+            var severityL = this.getSeverityLevel();
+            var result = '';
+
+            result += '<tr>';
+            result += '<td><span class="c-message--' + severityL +'">';
+            result += severityL;
+            result += '</span></td>';
+            result += '<td>' + this.getLine() +'</td>';
+            result += '<td>&#96' + this.getMessage() +'&#96</td>';
+            result += '</tr>';
+
+            return result;
+        };
+    }
+
+    Message.prototype.setMessage = function(message) {
+        this.message = message;
+    };
+
+    Message.prototype.getMessage = function() {
+        return this.message;
+    };
+
+    Message.prototype.setLine = function(line) {
+        this.line = line;
+    };
+
+    Message.prototype.getLine = function() {
+        return this.line;
+    };
+
+    Message.prototype.setSeverity = function(severity) {
+        this.severity = (severity && hasValue(msgSeverities, severity)) ? severity : 1;
+    };
+
+    Message.prototype.getSeverity = function() {
+        return this.severity;
+    };
+
+    Message.prototype.getSeverityLevel = function() {
+        return getKeyFromValue(getKeyFromValue, this.severity);
+    };
+
     return {
         extend: extend,
+        hasValue: hasValue,
+        getKeyFromValue: getKeyFromValue,
+        Message: Message
+    };
+})(this);
+
+bov_Utoolkit.namespace('validator').JSON = (function(){
+
+    var string = '"\\s*[^"]*\\s*"';
+    var boolean = '(?:true|false|null)\\b';
+    var number = '\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?';
+    var openA = '(?:^|:|,)(?:\\s*\\[)+';
+    var missingSemiColon = '[^\\]!,](?:]\\s*(]){1}[,}\\s])';
+    var missingProp = '[,{]\\s*[^\\]]:';
+    var missingValue = '[,{]\\s*]\\s*:?\\s*[,}]';
+    var missingComma = '[:\\]]\\s*(?:]\\s+(?=]))';
+    var extraComma = ',\\s*}';
+    var other = '(?:[^\\]{},:\\s]+)';
+
+    /**
+     * Extract the internal structure of a JSON document
+     * @param  {String} str  A string representing a JSON document
+     * @return {String} Returns a string containing the base structure of the
+     *                  the provided JSON document
+     */
+    function extractStructure(str) {
+        var pattern = string + '|' + boolean + '|' + number;
+        var reg = new RegExp(pattern, 'g');
+        var regA = new RegExp(openA, 'g');
+
+        // Replace each matching type with the ] char
+        str = str.replace(reg, ']');
+        // Remove the [ char
+        str = str.replace(regA, ']');
+
+        return str;
+    }
+
+
+    function lineNumberByIndex(index,string){
+        // RegExp
+        var line = 0,
+            match,
+            re = /(^)[\S\s]/gm;
+        while ((match = re.exec(string)) !== null) {
+            if(match.index > index)
+                break;
+            line++;
+        }
+        return line;
+    }
+
+    /**
+     * // TODO - Duplicate keys check
+     *
+     * Validate a JSON document
+     * @param  {String} str  A string representing a JSON document
+     * @return {Array} Returns an Array containing a list of errors (if any)
+     */
+    var validateJSON = function(str) {
+
+        var errorList = [];
+        var Message = bov_Utoolkit.namespace('utilities').obj.Message;
+        var errMsg = '';
+        var structure = extractStructure(str).trim();
+
+        var regEx;
+        var match;
+        var line;
+
+        // Check for obj structure
+        // The number of opening bracket must be equal to the closing ones
+        var openB  = (structure.match(/{/g) || []).length;
+        var closeB = (structure.match(/}/g) || []).length;
+
+
+        // The base structure contains only spaces
+        if ( /^\s*$/.test(structure) ) {
+            errorList.push(new Message('Empty JSON document', 1));
+            return errorList;
+        }
+
+        // Check if the number of both closing and opening brackets is equal
+        if (openB > closeB) {
+            line = lineNumberByIndex(structure.length -1, structure);
+            errMsg = 'Missing closing bracket `}`. Invalid Object structure';
+            errorList.push(new Message(errMsg, 0, line));
+        } else if (openB < closeB) {
+            errMsg = 'Missing opening bracket `{`. Invalid Object structure';
+            errorList.push(new Message(errMsg, 0));
+        }
+
+        // Check for missing colons
+
+        regEx = new RegExp(missingSemiColon, 'g');
+
+        while ((match = regEx.exec(structure)) !== null) {
+            line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
+            errorList.push(new Message('Missing Semicolon :', 0, line));
+        }
+
+        // Check for missing properties
+        regEx = new RegExp(missingProp, 'g');
+
+        while ((match = regEx.exec(structure)) !== null) {
+            line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
+            // Since the pattern match includes also the previous { char wich could
+            // be located on the previous line, increse the line number by 1
+            errorList.push(new Message('Missing Property', 0, line + 1));
+        }
+
+        // Check for missing commas
+        regEx = new RegExp(missingComma, 'g');
+
+        while ((match = regEx.exec(structure)) !== null) {
+            line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
+            errorList.push(new Message('Missing Comma ,', 0, line));
+        }
+
+        // Check for missing values
+        regEx = new RegExp(missingValue, 'g');
+
+        while ((match = regEx.exec(structure)) !== null) {
+            line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
+            errorList.push(new Message('Missing Value', 0, line));
+        }
+
+        // Check for extra commas
+        regEx = new RegExp(extraComma, 'g');
+
+        while ((match = regEx.exec(structure)) !== null) {
+            line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
+            errorList.push(new Message('Unnecessary Comma ,', 0, line));
+        }
+
+        // Check for any extra content
+        regEx = new RegExp(other, 'g');
+
+        while ((match = regEx.exec(structure)) !== null) {
+            line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
+            errorList.push(new Message('Invalid content: `' + match[0] +'`', 0, line));
+        }
+
+
+        return errorList;
+    };
+
+    return {
+        validateJSON: validateJSON
     };
 })(this);
 
@@ -329,6 +581,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
             this.caret = new Caret();
             this.selector = this.caret.getSelected();
 
+            this.handleJSONValidation();
+
             // Activate the Code Editor only when it is required
             if (this.settings['codeEditor']) {
                 this.codeArea.style.whiteSpace = 'nowrap';
@@ -351,6 +605,16 @@ document.addEventListener('DOMContentLoaded', function (e) {
             // Trigger a click event on the coding Area to activate
             // the editor's tracking system
             this.codeArea.click();
+        },
+
+        handleJSONValidation: function() {
+            var self = this;
+            var button = this.DOM.$('#JSONButton');
+            var val = bov_Utoolkit.namespace('validator').JSON;
+
+            button.addEventListener('click', function() {
+                console.log(val.validateJSON(self.codeArea.innerText));
+            });
         },
 
         observe: function() {
