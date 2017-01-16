@@ -102,6 +102,7 @@ $footer-height: map-get($UI-editor, footerHeight);
     //.c-editor__header
     @include e(header) {
       @extend %flex;
+      min-height: $header-height;
       width: 100%;
     }
 
@@ -120,7 +121,9 @@ $footer-height: map-get($UI-editor, footerHeight);
 
     //.c-editor__aside
     @include e(aside) {
+      @extend %flex-column-centered;
       width: 40%;
+      border: 1px solid;
       border: 1px solid;
       border-color: rgb(255, 255, 255);
       background: rgb(247, 247, 247);
