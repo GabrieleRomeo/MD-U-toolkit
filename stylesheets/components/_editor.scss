@@ -6,7 +6,7 @@ $UI-editor: (
   headerHeight: 60px,
   footerHeight: 24px,
   gutterWidth: 34px,
-  'c-codeEditor': (
+  'c-editor': (
     themes: (
       'black': (
         'codeArea': (
@@ -90,7 +90,8 @@ $header-height: map-get($UI-editor, headerHeight);
 $footer-height: map-get($UI-editor, footerHeight);
 
 
-.c-codeEditor {
+.c-editor {
+  display: flex;
   position: relative;
   height: 450px;
   width: 100%;
@@ -98,13 +99,18 @@ $footer-height: map-get($UI-editor, footerHeight);
   font-size: 14px;
   overflow: hidden;
 
-    //.c-codeEditor__header
+    //.c-editor__header
     @include e(header) {
       @extend %flex;
       width: 100%;
     }
 
-    //.c-codeEditor__body
+    //.c-editor__main
+    @include e(main) {
+      width: 60%;
+    }
+
+    //.c-editor__body
     @include e(body) {
       @extend %flex;
       width: 100%;
@@ -112,7 +118,15 @@ $footer-height: map-get($UI-editor, footerHeight);
       overflow: hidden;
     }
 
-    //.c-codeEditor__footer
+    //.c-editor__aside
+    @include e(aside) {
+      width: 40%;
+      border: 1px solid;
+      border-color: rgb(255, 255, 255);
+      background: rgb(247, 247, 247);
+    }
+
+    //.c-editor__footer
     @include e(footer) {
       @extend %flex;
       width: 100%;
@@ -121,19 +135,19 @@ $footer-height: map-get($UI-editor, footerHeight);
       min-height: $footer-height;
     }
 
-    //.c-codeEditor__gutter
+    //.c-editor__gutter
     @include e(gutter) {
       position: relative;
       width: $gutter-width;
     }
 
-    //.c-codeEditor__gutterList
+    //.c-editor__gutterList
     @include e(gutterList) {
       position: relative;
       text-align: right;
     }
 
-    //.c-codeEditor__gutterLine
+    //.c-editor__gutterLine
     @include e(gutterLine) {
       padding-right: 5px;
       counter-increment: step-counter;
@@ -143,7 +157,7 @@ $footer-height: map-get($UI-editor, footerHeight);
         };
     }
 
-    //.c-codeEditor__codeArea
+    //.c-editor__codeArea
     @include e(codeArea) {
       width: calc(100% - #{$gutter-width});
       overflow: auto;
