@@ -68,12 +68,72 @@
                   </li>
                   <li class="c-tab__item">
                     <i class="c-tab__icon  fa fa-share-square" aria-hidden="true"></i>
-                    output
+                    upload file
                   </li>
                 </ul>
                 <span class="c-tab__label">JSON</span>
               </div>
+
+              <!-- Start Tab Content -->
               <div class="c-tab__content c-tab__content--isActive">
+
+                <div class="c-content">
+                  <div class="c-content__main">
+
+                    <!-- Start editor -->
+                    <div class="c-editor c-editor--black" id="JSONeditor">
+                      <div class="c-editor__header">
+                      </div>
+                      <div class="c-editor__body">
+                        <div class="c-editor__gutter">
+                          <ul class="c-editor__gutterList">
+                          </ul>
+                        </div>
+                        <div class="c-editor__codeArea" tabindex="0" contenteditable="true">
+                        </div>
+                      </div>
+                      <div class="c-editor__footer">
+                        <div class="c-editor__info"></div>
+                      </div>
+                    </div>
+                    <!-- end editor -->
+
+                    <!-- validation button -->
+                    <div class="c-button">
+                      <div class="c-button_inner">
+                        <input id="validation" type="checkbox">
+                        <label id="JSONButton" for="validation">
+                          <div class="validation_button">
+                            <div class="validation_button__tick"></div>
+                            <div class="validation_button__ticked"></div>
+                            <span class="validation_button__text">
+                              Validate my JSON
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- end validation button -->
+
+                  </div>
+
+                  <div class="c-content__aside">
+                    <div class="c-info">
+                      <div class="c-info__header">
+                        <h2 class="c-info__title">Analysis Information</h2>
+                      </div>
+                      <div class="c-info__body">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End content -->
+
+              </div>
+              <!-- End Tab Content -->
+
+
+              <div class="c-tab__content">
 
                 <!-- Start File Upload -->
                 <div class="c-upload">
@@ -151,14 +211,12 @@
                       </ul>
                     </div>
                   </div>
-
                 </div>
                 <!-- End File Upload -->
 
               </div>
-              <div class="c-tab__content">
-                Tab Content 2
-              </div>
+              <!-- End Tab Content -->
+
             </div>
           </div>
           <!-- End Tab -->
@@ -170,6 +228,8 @@
         <div class="l-container">
         </div>
       </footer>
+
+      <script src="js/editor.js"></script>
 
     </body>
 </html>

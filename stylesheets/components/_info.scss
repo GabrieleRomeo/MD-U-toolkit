@@ -1,0 +1,61 @@
+
+$_border-properties: 1px solid conf($colors, 'dividers');
+
+.c-info {
+  margin: 20px;
+  padding: 20px 10px;
+  background-color: rgba(255, 255, 255, 0.62);
+
+    //.c-info__header
+    @include e(header) {
+      padding: 1px;
+      border-bottom: $_border-properties;
+    }
+
+    //.c-info__title
+    @include e(title) {
+      text-transform: uppercase;
+    }
+
+    //.c-info__table
+    @include e(table) {
+      width: 100%;
+      margin: 10px;
+
+        td:nth-child(1) {
+          width: 15%;
+        }
+        td:nth-child(2) {
+          width: 20%;
+        }
+    }
+
+    //.c-info__message
+    @include e(message) {
+      padding: 5px;
+      font-variant: small-caps;
+
+      //.c-info__message--warning
+      @include m(warning) {
+        background-color: rgb(255, 255, 0);
+      }
+
+      //.c-info__message--error
+      @include m(error) {
+        color: #fff;
+        background-color: rgb(204, 0, 0);
+      }
+
+      //.c-info__message--info
+      @include m(info) {
+        background-color: rgb(96, 209, 21);
+      }
+    }
+
+    //.g-grid
+
+    .g-grid {
+      padding: 10px 0;
+      border-bottom: $_border-properties;
+    }
+}
