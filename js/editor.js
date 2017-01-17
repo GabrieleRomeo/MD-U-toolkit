@@ -3,7 +3,9 @@ var editor = (function(win) {
 
     'use strict';
 
+    var editorInstance = null;
     var bov_Utoolkit =  bov_Utoolkit || {};
+
 
     bov_Utoolkit.namespace = function (name) {
 
@@ -128,6 +130,23 @@ var editor = (function(win) {
         /**
          * Get the closest matching element up the DOM tree.
          * @param  {String} selector  String that specifies the chain of selectors.
+         * @return {Function} returns a function which get an element to start with.
+         *                    if the element was not provided it uses the document
+         *                    object.
+         */
+        var $1 = function(selector) {
+            return function(element) {
+                if (element) {
+                    return element.querySelector(selector);
+                } else {
+                    return doc.querySelector(selector);
+                }
+            };
+        };
+
+        /**
+         * Get the closest matching element up the DOM tree.
+         * @param  {String} selector  String that specifies the chain of selectors.
          * @return {NodeList} Returns a NodeList collection filled with the matching
                                         elements in source order
          */
@@ -175,6 +194,7 @@ var editor = (function(win) {
 
         return {
             $: $,
+            $1: $1,
             $$: $$,
             getClosest: getClosest
         };
@@ -344,19 +364,32 @@ var editor = (function(win) {
          */
         function Message(message, severity, line /*optional*/) {
             this.message = message;
-            this.severity = (severity && hasValue(msgSeverities, severity)) ? severity : 1;
+            this.severity = 1;
             this.line = line;
+
+
+            if ((typeof severity !== 'undefined') && hasValue(msgSeverities, severity)) {
+                this.severity = severity;
+            }
 
             this.render = function() {
 
                 var severityL = this.getSeverityLevel();
                 var result = '';
+                var line = this.getLine();
 
                 result += '<tr>';
-                result += '<td><span class="c-message--' + severityL +'">';
+                result += '<td><span class="c-info__message c-info__message--';
+                result += severityL +'">';
                 result += severityL;
                 result += '</span></td>';
-                result += '<td>' + this.getLine() +'</td>';
+
+                if (line) {
+                    result += '<td>at line ' + this.getLine() +'</td>';
+                } else {
+                    result += '<td></td>';
+                }
+
                 result += '<td>&#96' + this.getMessage() +'&#96</td>';
                 result += '</tr>';
 
@@ -389,7 +422,7 @@ var editor = (function(win) {
         };
 
         Message.prototype.getSeverityLevel = function() {
-            return getKeyFromValue(getKeyFromValue, this.severity);
+            return getKeyFromValue(msgSeverities, this.severity);
         };
 
         return {
@@ -406,7 +439,7 @@ var editor = (function(win) {
         var boolean = '(?:true|false|null)\\b';
         var number = '\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?';
         var openA = '(?:^|:|,)(?:\\s*\\[)+';
-        var missingSemiColon = '[^\\]!,](?:]\\s*(]){1}[,}\\s])';
+        var missingSemiColon = '[^\\],](?:]\\s*(?:[\\]{]){1}[,}\\s])';
         var missingProp = '[,{]\\s*[^\\]]:';
         var missingValue = '[,{]\\s*]\\s*:?\\s*[,}]';
         var missingComma = '[:\\]]\\s*(?:]\\s+(?=]))';
@@ -479,10 +512,10 @@ var editor = (function(win) {
             // Check if the number of both closing and opening brackets is equal
             if (openB > closeB) {
                 line = lineNumberByIndex(structure.length -1, structure);
-                errMsg = 'Missing closing bracket `}`. Invalid Object structure';
+                errMsg = 'Missing closing bracket }. Invalid Object structure';
                 errorList.push(new Message(errMsg, 0, line));
             } else if (openB < closeB) {
-                errMsg = 'Missing opening bracket `{`. Invalid Object structure';
+                errMsg = 'Missing opening bracket {. Invalid Object structure';
                 errorList.push(new Message(errMsg, 0));
             }
 
@@ -518,7 +551,9 @@ var editor = (function(win) {
 
             while ((match = regEx.exec(structure)) !== null) {
                 line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                errorList.push(new Message('Missing Value', 0, line));
+                // Since the pattern match includes also the previous { char wich could
+                // be located on the previous line, increse the line number by 1
+                errorList.push(new Message('Missing Value', 0, line + 1));
             }
 
             // Check for extra commas
@@ -534,9 +569,8 @@ var editor = (function(win) {
 
             while ((match = regEx.exec(structure)) !== null) {
                 line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                errorList.push(new Message('Invalid content: `' + match[0] +'`', 0, line));
+                errorList.push(new Message('Invalid content: ' + match[0] +'', 0, line));
             }
-
 
             return errorList;
         };
@@ -579,10 +613,10 @@ var editor = (function(win) {
             this.footer = this.BEM('footer').node;
             this.contentMain = this.DOM.getClosest(this.element, 'div.c-content__main');
             this.aside = this.contentMain.nextElementSibling;
+            this.infoComponent = $(this.DOM.$1('.c-info')(this.aside));
+            this.infoBody = this.infoComponent('body');
             this.caret = new Caret();
             this.selector = this.caret.getSelected();
-
-            this.handleJSONValidation();
 
             // Activate the Code Editor only when it is required
             if (this.settings['codeEditor']) {
@@ -608,16 +642,25 @@ var editor = (function(win) {
             this.codeArea.click();
         },
 
-        handleJSONValidation: function() {
-            var self = this;
-            var button = this.DOM.$('#JSONButton');
+        validateJSON: function() {
+            var info = this.infoBody;
+            var infoNode = info.node;
             var val = bov_Utoolkit.namespace('validator').JSON;
+            var errorList = val.validateJSON(this.codeArea.innerText) || [];
 
+            var elements = '';
 
-            button.addEventListener('click', function() {
-                console.log(self.aside);
-                console.log(val.validateJSON(self.codeArea.innerText));
+            errorList.forEach( function(error) {
+                elements += '<div class="g-grid">';
+                elements += '<table class="c-info__table">';
+                elements += error.render();
+                elements += '</table>';
+                elements += '</div>';
             });
+
+            infoNode.innerHTML = elements;
+
+            //return table;
         },
 
         observe: function() {
@@ -1036,7 +1079,7 @@ var editor = (function(win) {
     function buildEditor(element, options) {
 
         if (element) {
-            new Editor(element, options);
+            editorInstance = new Editor(element, options);
         } else {
             window.console.warn('The provided HTML element does not exists');
         }
@@ -1044,16 +1087,29 @@ var editor = (function(win) {
         return undefined;
     }
 
+    function validateJSON() {
+        if (editorInstance) {
+            return editorInstance.validateJSON();
+        }
+    }
+
     // Public API
     return {
-        Editor: buildEditor
+        Editor: buildEditor,
+        validateJSON: validateJSON
     };
 
 })(this);
 
-var jsonE = document.querySelector('#JSONeditor');
+var jsonEdit = document.querySelector('#JSONeditor');
+var jsonButt = document.querySelector('#JSONButton');
+
+var jsonEditor = new editor.Editor(jsonEdit);
 
 
-var editor1 = new editor.Editor(jsonE);
-
+jsonButt.addEventListener('click', function() {
+    if (!this.previousElementSibling.checked) {
+        editor.validateJSON();
+    }
+});
 
