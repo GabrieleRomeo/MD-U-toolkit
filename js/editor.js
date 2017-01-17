@@ -647,7 +647,8 @@ console.log(structure);
             var infoNode = info.node;
             var val = bov_Utoolkit.namespace('validator').JSON;
             var errorList = val.validateJSON(this.codeArea.innerText) || [];
-
+            var Message = bov_Utoolkit.namespace('utilities').obj.Message;
+            var info = '';
             var elements = '';
 
             errorList.forEach( function(error) {
@@ -657,6 +658,18 @@ console.log(structure);
                 elements += '</table>';
                 elements += '</div>';
             });
+
+            // No Errors
+            if (errorList.length === 0) {
+                info =  'Congrats! No errors found.\n';
+                info += 'Your JSON is valid';
+                info = new Message(info, 2);
+                elements += '<div class="g-grid">';
+                elements += '<table class="c-info__table">';
+                elements += info.render();
+                elements += '</table>';
+                elements += '</div>';
+            }
 
             infoNode.innerHTML = elements;
 
