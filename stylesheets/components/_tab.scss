@@ -79,6 +79,8 @@ $_border-properties: 1px solid conf($colors, 'dividers');
           width: 40%;
           border-color: rgb(255, 255, 255);
           background: rgb(247, 247, 247);
+          overflow-x: hidden;
+          overflow-y: scroll;
         }
     }
 }
