@@ -430,8 +430,18 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             return getKeyFromValue(msgSeverities, this.severity);
         };
 
+        /**
+         * Given an Object it returs an Array containing the object's elements
+         * @param  {Object} obj  An Object
+        * @return {Array}
+         */
+        var toArray = function(obj) {
+            return [].slice.call(obj);
+        };
+
         return {
             extend: extend,
+            toArray: toArray,
             hasValue: hasValue,
             getKeyFromValue: getKeyFromValue,
             Message: Message
