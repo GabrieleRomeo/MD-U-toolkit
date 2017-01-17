@@ -571,7 +571,7 @@ var editor = (function(win) {
                 line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
                 errorList.push(new Message('Invalid content: ' + match[0] +'', 0, line));
             }
-console.log(structure);
+
             return errorList;
         };
 
@@ -589,7 +589,19 @@ console.log(structure);
         this.settings = objUtil.extend({}, {
             blockName: 'c-editor',
             highlightActiveLine: false,
-            codeEditor: true
+            codeEditor: true,
+            stickyLine: true,
+            sticky: {
+                'error': {
+                    'bgkcolor': 'rgba(204, 0, 0, 0.58)'
+                },
+                'warning': {
+                    'bgkcolor' : 'rgba(255, 255, 0, 0.8)'
+                },
+                'info': {
+                    'bgkcolor': 'rgb(96, 209, 21)'
+                }
+            }
         }, options || {});
         this.init();
     }
@@ -673,7 +685,7 @@ console.log(structure);
 
             infoNode.innerHTML = elements;
 
-            //return table;
+            this.setStickies(errorList);
         },
 
         observe: function() {
@@ -997,6 +1009,31 @@ console.log(structure);
             }
 
             return offsets;
+        },
+
+        setStickies: function(matches) {
+            var isStickyActive = this.settings['stickyLine'];
+            var stikies = this.settings['sticky'];
+            var gutter = this.gutterList;
+            var children = gutter.children;
+
+            if (!isStickyActive) {
+                // do nothing
+                return;
+            }
+
+            this._toArray(children).forEach( function(child) {
+                // remove previous styles (if any)
+                child.style = '';
+            });
+
+            matches.forEach( function(m) {
+                var line = m.line;
+                var severityL = m.getSeverityLevel();
+                if (line && children[line -1]) {
+                    children[line -1].style.backgroundColor = stikies[severityL]['bgkcolor'];
+                }
+            });
         },
 
         highlightLine: function(index /* optional */) {
