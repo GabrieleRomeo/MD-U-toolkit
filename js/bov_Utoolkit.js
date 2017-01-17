@@ -187,11 +187,21 @@ var bov_Utoolkit =  bov_Utoolkit || {};
 
         };
 
+        /**
+         * Get the index of a child node in parent
+         * @param  {HTMLNode} childNode An HTML child node
+         * @return {Number}
+         */
+        var getIndexOf = function(childNode) {
+            return [].indexOf.call(childNode.parentNode.children, childNode);
+        };
+
         return {
             $: $,
             $1: $1,
             $$: $$,
-            getClosest: getClosest
+            getClosest: getClosest,
+            getIndexOf: getIndexOf
         };
     })(this);
 
