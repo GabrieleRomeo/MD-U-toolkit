@@ -34,6 +34,7 @@ $_border-properties: 1px solid conf($colors, 'dividers');
 
     // .c-tab__item
     @include e('item') {
+      @extend %pointer;
       position: relative;
       padding: 15px 20px;
       border-right: $_border-properties;
