@@ -22,14 +22,18 @@ $_border-properties: 1px solid conf($colors, 'dividers');
       width: 100%;
       margin: 10px;
 
-        td {
-          width: calc(100% / 3);
+        td:nth-child(1) {
+          width: 15%;
+        }
+        td:nth-child(2) {
+          width: 20%;
         }
     }
 
     //.c-info__message
     @include e(message) {
       padding: 5px;
+      font-variant: small-caps;
 
       //.c-info__message--warning
       @include m(warning) {
