@@ -469,7 +469,7 @@ bov_Utoolkit.namespace('validator').JSON = (function(){
 
         // The base structure contains only spaces
         if ( /^\s*$/.test(structure) ) {
-            errorList.push(new Message('Empty JSON document', 1));
+            errorList.push(new Message('Empty JSON document', 1, 0));
             return errorList;
         }
 
