@@ -439,7 +439,7 @@ var editor = (function(win) {
         var boolean = '(?:true|false|null)\\b';
         var number = '\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?';
         var openA = '(?:^|:|,)(?:\\s*\\[)+';
-        var missingSemiColon = '[^\\],](?:]\\s*(?:[\\]{]){1}[,}\\s])';
+        var missingColon = '[^\\],](?:]\\s*(?:[\\]{]){1}[,}\\s])';
         var missingProp = '[,{]\\s*[^\\]]:';
         var missingValue = '[,{]\\s*]\\s*:?\\s*[,}]';
         var missingComma = '[:\\]]\\s*(?:]\\s+(?=]))|(}\\s*])';
@@ -521,11 +521,11 @@ var editor = (function(win) {
 
             // Check for missing colons
 
-            regEx = new RegExp(missingSemiColon, 'g');
+            regEx = new RegExp(missingColon, 'g');
 
             while ((match = regEx.exec(structure)) !== null) {
                 line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                errorList.push(new Message('Missing Semicolon :', 0, line));
+                errorList.push(new Message('Missing Colon :', 0, line));
             }
 
             // Check for missing properties
