@@ -1,4 +1,18 @@
 
+$_border-properties: 1px solid conf($colors, 'dividers');
+
 .c-info {
-  
+  position: relative;
+  padding: 20px;
+
+    //.c-info__header
+    @include e(header) {
+      padding: 1px;
+      border-bottom: $_border-properties;
+    }
+
+    //.c-info__title
+    @include e(title) {
+      text-transform: uppercase;
+    }
 }
