@@ -68,12 +68,43 @@
                   </li>
                   <li class="c-tab__item">
                     <i class="c-tab__icon  fa fa-share-square" aria-hidden="true"></i>
-                    output
+                    upload file
                   </li>
                 </ul>
                 <span class="c-tab__label">JSON</span>
               </div>
               <div class="c-tab__content c-tab__content--isActive">
+
+                <!-- Start editor -->
+
+                <div class="c-editor c-editor--black" id="c-editor">
+                 <div class="c-editor__main">
+                    <div class="c-editor__header">
+                      <input type="button" value="Validate JSON" id="JSONButton">
+                    </div>
+                    <div class="c-editor__body">
+                      <div class="c-editor__gutter">
+                        <ul class="c-editor__gutterList">
+                        </ul>
+                      </div>
+                      <div class="c-editor__codeArea" tabindex="0" contenteditable="true">
+                      </div>
+                    </div>
+                    <div class="c-editor__footer">
+                      <div class="c-editor__info"></div>
+                    </div>
+                  </div>
+                  <div class="c-editor__aside">
+                    <div class="">
+                      <h2>Congrats! You JSON file is valid</h2>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- end editor -->
+
+              </div>
+              <div class="c-tab__content">
 
                 <!-- Start File Upload -->
                 <div class="c-upload">
@@ -154,38 +185,6 @@
                 </div>
                 <!-- End File Upload -->
 
-                <!-- Start editor -->
-
-
-                <div class="c-editor c-editor--black" id="c-editor">
-                 <div class="c-editor__main">
-                    <div class="c-editor__header">
-                      <input type="button" value="Validate JSON" id="JSONButton">
-                    </div>
-                    <div class="c-editor__body">
-                      <div class="c-editor__gutter">
-                        <ul class="c-editor__gutterList">
-                        </ul>
-                      </div>
-                      <div class="c-editor__codeArea" tabindex="0" contenteditable="true">
-                      </div>
-                    </div>
-                    <div class="c-editor__footer">
-                      <div class="c-editor__info"></div>
-                    </div>
-                  </div>
-                  <div class="c-editor__aside">
-                    <div class="">
-                      
-                    </div>
-                  </div>
-                </div>
-
-                <!-- end editor -->
-
-              </div>
-              <div class="c-tab__content">
-                Tab Content 2
               </div>
             </div>
           </div>
