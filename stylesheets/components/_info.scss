@@ -2,8 +2,9 @@
 $_border-properties: 1px solid conf($colors, 'dividers');
 
 .c-info {
-  position: relative;
-  padding: 20px;
+  margin: 20px;
+  padding: 20px 10px;
+  background-color: rgba(255, 255, 255, 0.62);
 
     //.c-info__header
     @include e(header) {
@@ -14,5 +15,43 @@ $_border-properties: 1px solid conf($colors, 'dividers');
     //.c-info__title
     @include e(title) {
       text-transform: uppercase;
+    }
+
+    //.c-info__table
+    @include e(table) {
+      width: 100%;
+      margin: 10px;
+
+        td {
+          width: calc(100% / 3);
+        }
+    }
+
+    //.c-info__message
+    @include e(message) {
+      padding: 5px;
+
+      //.c-info__message--warning
+      @include m(warning) {
+        background-color: rgb(255, 255, 0);
+      }
+
+      //.c-info__message--error
+      @include m(error) {
+        color: #fff;
+        background-color: rgb(204, 0, 0);
+      }
+
+      //.c-info__message--info
+      @include m(info) {
+        background-color: rgb(102, 153, 255);
+      }
+    }
+
+    //.g-grid
+
+    .g-grid {
+      padding: 10px 0;
+      border-bottom: $_border-properties;
     }
 }
