@@ -3,7 +3,6 @@ var editor = (function(win) {
 
     'use strict';
 
-    var editorInstance = null;
     var bov_Utoolkit =  bov_Utoolkit || {};
 
 
@@ -1127,6 +1126,7 @@ var editor = (function(win) {
     };
 
     function buildEditor(element, options) {
+        var editorInstance = null;
 
         if (element) {
             editorInstance = new Editor(element, options);
@@ -1134,19 +1134,12 @@ var editor = (function(win) {
             window.console.warn('The provided HTML element does not exists');
         }
 
-        return undefined;
-    }
-
-    function validateJSON() {
-        if (editorInstance) {
-            return editorInstance.validateJSON();
-        }
+        return editorInstance;
     }
 
     // Public API
     return {
-        Editor: buildEditor,
-        validateJSON: validateJSON
+        Editor: buildEditor
     };
 
 })(this);
@@ -1159,7 +1152,7 @@ var jsonEditor = new editor.Editor(jsonEdit);
 
 jsonButt.addEventListener('click', function() {
     if (!this.previousElementSibling.checked) {
-        editor.validateJSON();
+        jsonEditor.validateJSON();
     }
 });
 
