@@ -55,10 +55,30 @@ $_border-properties: 1px solid conf($colors, 'dividers');
     // .c-tab__content
     @include element('content') {
       display: none;
-      padding: 20px;
 
+        // .c-tab__content--isActive
         @include modifier('isActive') {
           display: block;
+        }
+    }
+
+    // .c-content
+    .c-content {
+      display: flex;
+      width: 100%;
+      min-height: 82.8vh;
+
+        // .c-content__main
+        @include element(main) {
+          width: 60%;
+          padding: 20px;
+        }
+
+        // .c-content__aside
+        @include element(aside) {
+          width: 40%;
+          border-color: rgb(255, 255, 255);
+          background: rgb(247, 247, 247);
         }
     }
 }
