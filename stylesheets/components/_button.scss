@@ -1,0 +1,161 @@
+$container-padding:40px;
+
+$heading-color:red;
+$heading-size:10px;
+
+$sub-heading-color:#9A9FB5;
+$sub-heading-size:22px;
+
+$link-color:#f65252;
+
+// Template variables
+
+$body-border:14px;
+$body-border-color:white;
+$container-padding:40px;
+
+
+// Button variables
+$button-border-width:2px;
+$button-font-weight:700;
+$button-color:#f65252;
+$button-width: 260px;
+$button-padding-v:24px;
+$button-padding-h:45px;
+$button-font-size:12px;
+$button-transition-speed:.34s;
+$button-box-shadow-size:10px;
+$button-box-shadow:0px 0px 0px $button-box-shadow-size rgba(230, 230, 230, .5);
+$button-pulse: 0px 0px 0px ($button-box-shadow-size*100) rgba(230, 230, 230, 0);
+
+
+.c-button{
+    position: relative;
+    width: $button-width;
+    border:$body-border solid $body-border-color;
+    padding:$container-padding;
+    margin: 50px auto;
+    box-sizing:border-box;
+    &_inner{
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      transform:translateY(-50%);
+    }
+    h1,h2{
+      font-weight:300;
+    }
+    h1{
+      margin:0;
+      color:#6E738A;
+    }
+    p{
+      color:#6E738A;
+      font-weight:300;
+      margin-top:130px;
+    }
+    .love span{
+      font-size: 12px;
+      color: rgb(188, 188, 188);
+      font-weight: 300;
+      a{
+        color: $link-color;
+        font-weight: 700;
+      }
+      img{
+        position: relative;
+        margin: 3px;
+        top: 7px;
+      }
+    }
+    h2{
+      margin: 7px 0 24px 0;
+      font-size: $sub-heading-size;
+      color: $sub-heading-color
+    }
+    a{
+      color:$link-color;
+      text-decoration:none;
+      &:hover{
+        text-decoration:underline;
+      }
+    }
+
+
+  .validation_button {
+    position:relative;
+    border: $button-border-width solid $button-color;
+    margin: 0 auto;
+    padding: $button-padding-v $button-padding-h;
+    width: 100%;
+    border-radius: 100px;
+    cursor: pointer;
+    display: inline-block;
+    overflow:hidden;
+
+    &__tick,&__ticked{
+      width:4px;
+      opacity:0;
+      height:8px;
+      border-bottom:2px solid white;
+      border-right:2px solid white;
+      transform:rotate(45deg);
+      position:absolute;
+      right:50px;
+      top:17px;
+      transition:right $button-transition-speed,opacity $button-transition-speed + .2s;
+    }
+    &__ticked{
+      border-bottom:2px solid $button-color;
+      border-right:2px solid $button-color;
+      right: 21px;
+      top: 100px;
+      transition:top $button-transition-speed + .1s $button-transition-speed + .1s;
+    }
+    &__text{
+      position: absolute;
+      font-weight: $button-font-weight;
+      font-size: $button-font-size;
+      transition: all $button-transition-speed;
+      color: $button-color;
+      display: block;
+      left: 56px;
+      top: 16px;
+    }
+    &:hover{
+      background:$button-color;
+      box-shadow:$button-box-shadow;
+    }
+    &:hover > span{
+      color:white;
+      left:28px;
+    }
+    &:hover > .validation_button__tick{
+      right:30px;
+      opacity:1;
+    }
+  }
+  input[type='checkbox']{
+    display:none;
+  }
+  input[type='checkbox']:checked + label > .validation_button{
+    width:0;
+    transition:all $button-transition-speed .2s;
+    padding: $button-padding-v;
+    box-shadow:$button-pulse;
+    background:transparent;
+  }
+  input[type='checkbox']:not(checked) + label > .validation_button{
+    width: 100%;
+    transition:width $button-transition-speed;
+  }
+  input[type='checkbox']:checked + label > .validation_button > span,input[type='checkbox']:checked + label > .validation_button > .validation_button__tick{
+    opacity:0;
+  }
+  input[type='checkbox']:checked + label > .validation_button > .validation_button__ticked{
+    opacity:1;
+    top: 19px;
+  }
+
+}

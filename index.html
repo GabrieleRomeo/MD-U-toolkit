@@ -81,9 +81,8 @@
                   <div class="c-content__main">
 
                     <!-- Start editor -->
-                    <div class="c-editor c-editor--black" id="c-editor">
+                    <div class="c-editor c-editor--black" id="JSONeditor">
                       <div class="c-editor__header">
-                        <input type="button" value="Validate JSON" id="JSONButton">
                       </div>
                       <div class="c-editor__body">
                         <div class="c-editor__gutter">
@@ -99,6 +98,23 @@
                     </div>
                     <!-- end editor -->
 
+                    <!-- validation button -->
+                    <div class="c-button">
+                      <div class="c-button_inner">
+                        <input id="validation" type="checkbox">
+                        <label id="JSONButton" for="validation">
+                          <div class="validation_button">
+                            <div class="validation_button__tick"></div>
+                            <div class="validation_button__ticked"></div>
+                            <span class="validation_button__text">
+                              Validate my JSON
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- end validation button -->
+
                   </div>
 
                   <div class="c-content__aside">
@@ -107,12 +123,11 @@
                         <h2 class="c-info__title">Analysis Information</h2>
                       </div>
                       <div class="c-info__body">
-                        
                       </div>
                     </div>
                   </div>
-
                 </div>
+                <!-- End content -->
 
               </div>
               <!-- End Tab Content -->
