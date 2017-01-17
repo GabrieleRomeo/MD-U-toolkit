@@ -14,13 +14,13 @@ $_border-properties: 1px solid conf($colors, 'dividers');
     }
 
     // .c-tab__divider
-    @include element('divider') {
+    @include e('divider') {
       display: flex;
       justify-content: space-between;
       border-bottom: $_border-properties;
     }
 
-    @include element('label') {
+    @include e('label') {
       align-self: center;
       margin-right: 1em;
       color: conf(conf($colors, dark-text), disabled);
@@ -28,12 +28,12 @@ $_border-properties: 1px solid conf($colors, 'dividers');
     }
 
     // .c-tab__list
-    @include element('list') {
+    @include e('list') {
       display: flex;
     }
 
     // .c-tab__item
-    @include element('item') {
+    @include e('item') {
       position: relative;
       padding: 15px 20px;
       border-right: $_border-properties;
@@ -53,7 +53,7 @@ $_border-properties: 1px solid conf($colors, 'dividers');
     }
 
     // .c-tab__content
-    @include element('content') {
+    @include e('content') {
       display: none;
 
         // .c-tab__content--isActive
@@ -69,13 +69,13 @@ $_border-properties: 1px solid conf($colors, 'dividers');
       min-height: 82.8vh;
 
         // .c-content__main
-        @include element(main) {
+        @include e(main) {
           width: 60%;
           padding: 20px;
         }
 
         // .c-content__aside
-        @include element(aside) {
+        @include e(aside) {
           width: 40%;
           border-color: rgb(255, 255, 255);
           background: rgb(247, 247, 247);
