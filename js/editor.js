@@ -442,7 +442,7 @@ var editor = (function(win) {
         var missingSemiColon = '[^\\],](?:]\\s*(?:[\\]{]){1}[,}\\s])';
         var missingProp = '[,{]\\s*[^\\]]:';
         var missingValue = '[,{]\\s*]\\s*:?\\s*[,}]';
-        var missingComma = '[:\\]]\\s*(?:]\\s+(?=]))';
+        var missingComma = '[:\\]]\\s*(?:]\\s+(?=]))|(}\\s*])';
         var extraComma = ',\\s*}';
         var other = '(?:[^\\]{},:\\s]+)';
 
@@ -571,7 +571,7 @@ var editor = (function(win) {
                 line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
                 errorList.push(new Message('Invalid content: ' + match[0] +'', 0, line));
             }
-
+console.log(structure);
             return errorList;
         };
 
