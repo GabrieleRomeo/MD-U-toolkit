@@ -5,6 +5,9 @@ $conf-title-family: conf($conf-title, 'font-family');
 
 .c-upload {
 
+  width: 80%;
+  margin: 0 auto;
+
   @include e('body') {
     display: flex;
   }
