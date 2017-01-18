@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center; }
 
-.c-upload__input--file, .c-upload .c-file__icon--close {
+.c-tab__item, .c-upload__input--file, .c-upload .c-file__icon--close {
   cursor: pointer; }
 
 *, *:after, *:before {
@@ -81,9 +81,11 @@ body {
 .c-tab {
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  display: flex;
+  display: none;
   position: relative;
   min-height: inherit; }
+  .c-tab--isActive {
+    display: flex; }
   .c-tab .l-grid {
     width: 100%;
     background-color: white; }
