@@ -49,6 +49,10 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                 target.classList.add(activeItemCls);
                 contentList[index].classList.add(activeContentCls);
             }
+
+            event.preventDefault();
+            event.stopPropagation();
+
         }, false);
     })();
 
@@ -99,6 +103,10 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                     target.classList.add(activeItemCls);
                     contentList[index].classList.add(activeContentCls);
                 }
+
+                event.preventDefault();
+                event.stopPropagation();
+
             }, false);
         });
     })();
