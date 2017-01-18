@@ -3,9 +3,14 @@ $_border-properties: 1px solid conf($colors, 'dividers');
 
 .c-tab {
     @include border-top-bottom($_border-properties);
-    display: flex;
+    display: none;
     position: relative;
     min-height: inherit;
+
+    // .c-tab--isActive
+    @include m('isActive') {
+      display: flex;
+    }
 
     // Layout grid container
     .l-grid {

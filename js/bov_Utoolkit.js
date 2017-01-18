@@ -269,9 +269,41 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             };
         };
 
+        var handleClickableList = function(options) {
+            var DOM = bov_Utoolkit.namespace('utilities.DOM');
+            var $ = DOM.$;
+            var $$ = DOM.$$;
+            var BEM = DOM.BEM.$;
+
+            var elem = BEM($(options.block));
+            var listS = elem('list').BEMselector;
+            var list = $$('.' + listS);
+            var content = options.content ? BEM($(options.content))('content') : elem('content');
+            var itemClsName = elem('item').BEMselector;
+            var activeItemCls = itemClsName +'--isActive';
+
+            var contentClsName = content.BEMselector ? content.BEMselector :
+                                 content.classList[0];
+            var activeContentCls = contentClsName +'--isActive';
+
+            var contentList = $$('.' + contentClsName);
+            var itemList = $$('.' + itemClsName);
+
+            return {
+                list: list,
+                itemList: itemList,
+                contentList: contentList,
+                itemClsName: itemClsName,
+                activeItemCls: activeItemCls,
+                contentClsName: contentClsName,
+                activeContentCls: activeContentCls
+            };
+        };
+
         return {
             $: BEM,
-            $$: BEM$
+            $$: BEM$,
+            handleClickableList: handleClickableList
         };
     })(this);
 
