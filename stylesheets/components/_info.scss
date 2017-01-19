@@ -1,9 +1,15 @@
 
 $_border-properties: 1px solid conf($colors, 'dividers');
 
+%padding {
+  padding: 2px;
+}
+
 .c-info {
   margin: 20px;
   padding: 20px 10px;
+  font-size: 0.85em;
+  font-weight: 300;
   background-color: rgba(255, 255, 255, 0.62);
 
     //.c-info__header
@@ -15,6 +21,7 @@ $_border-properties: 1px solid conf($colors, 'dividers');
     //.c-info__title
     @include e(title) {
       text-transform: uppercase;
+      font-weight: 700;
     }
 
     //.c-info__table
@@ -22,9 +29,11 @@ $_border-properties: 1px solid conf($colors, 'dividers');
       width: 100%;
       margin: 10px;
 
-        td:nth-child(1) {
-          width: 15%;
+        td {
+          padding: 5px 0;
         }
+
+        td:nth-child(1),
         td:nth-child(2) {
           width: 20%;
         }
@@ -32,22 +41,24 @@ $_border-properties: 1px solid conf($colors, 'dividers');
 
     //.c-info__message
     @include e(message) {
-      padding: 5px;
       font-variant: small-caps;
 
       //.c-info__message--warning
       @include m(warning) {
+        @extend %padding;
         background-color: rgb(255, 255, 0);
       }
 
       //.c-info__message--error
       @include m(error) {
+        @extend %padding;
         color: #fff;
         background-color: rgb(204, 0, 0);
       }
 
       //.c-info__message--info
       @include m(info) {
+        @extend %padding;
         background-color: rgb(96, 209, 21);
       }
     }
