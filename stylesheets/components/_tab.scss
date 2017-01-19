@@ -83,7 +83,7 @@ $_border-properties: 1px solid conf($colors, 'dividers');
         // .c-content__aside
         @include e(aside) {
           width: 40%;
-          max-height: 700px;
+          max-height: 900px;
           border-color: rgb(255, 255, 255);
           background: rgb(247, 247, 247);
           overflow-x: hidden;

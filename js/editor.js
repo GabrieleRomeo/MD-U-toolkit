@@ -1,4 +1,5 @@
 var bov_Utoolkit =  bov_Utoolkit || {};
+var objUtil = bov_Utoolkit.namespace('utilities').obj;
 
 var editor = (function(win) {
 
@@ -6,7 +7,7 @@ var editor = (function(win) {
 
 
     function Editor(element, options) {
-        var objUtil = bov_Utoolkit.namespace('utilities').obj;
+
         // Firefox only
         win.document.execCommand('insertBrOnReturn', false, false);
 
@@ -15,6 +16,7 @@ var editor = (function(win) {
             blockName: 'c-editor',
             highlightActiveLine: false,
             codeEditor: true,
+            showTopMenu: true,
             stickyLine: true,
             sticky: {
                 'error': {
@@ -40,10 +42,13 @@ var editor = (function(win) {
             var temp = '';
 
             this.BEM = $(this.element);
+            this.obj = bov_Utoolkit.namespace('utilities').obj;
             this.DOM = bov_Utoolkit.namespace('utilities.DOM');
+            // TODO add sessions
             this.storage = sessionStorage;
 
             this.gutter = this.BEM('gutter').node;
+            this.header = this.BEM('header').node;
             this.gutterList = this.BEM('gutterList').node;
             this.codeArea = this.BEM('codeArea').node;
             this.mirrorArea = this.BEM('mirrorArea').node;
@@ -54,6 +59,10 @@ var editor = (function(win) {
             this.infoBody = this.infoComponent('body');
             this.caret = new Caret();
             this.selector = this.caret.getSelected();
+
+            if (this.settings['height']) {
+                this.element.style.height = this.settings['height'] + 'px';
+            }
 
             // Activate the Code Editor only when it is required
             if (this.settings['codeEditor']) {
@@ -72,6 +81,10 @@ var editor = (function(win) {
                 this.gutter.style.backgroundColor = temp('background-color');
                 this.gutter.style.width = '10px';
                 this.codeArea.style.width = 'calc(100% - 10px)';
+            }
+
+            if (!this.settings['showTopMenu']) {
+                this.header.style.display = 'none';
             }
 
             // Trigger a click event on the coding Area to activate
@@ -111,6 +124,43 @@ var editor = (function(win) {
             infoNode.innerHTML = elements;
 
             this.setStickies(errorList);
+        },
+
+        harvesting: function(pattern, message, resultEditor) {
+            var info = this.infoBody;
+            var infoNode = info.node;
+            var harvesting = this.obj.harvesting(pattern, message, this.codeArea.innerText);
+            var elements = '';
+
+            var resultArea = resultEditor.querySelector('.c-editor__codeArea');
+            var linksArr = [];
+            var emailsArr = [];
+
+
+            harvesting.forEach( function(match) {
+                elements += '<div class="g-grid">';
+                elements += '<table class="c-info__table">';
+                elements += match.render();
+                elements += '</table>';
+                elements += '</div>';
+
+                if ( match.mtch.match[0].indexOf('@') !== -1 ) {
+                    emailsArr.push(match.mtch.match[1]);
+                } else {
+                    linksArr.push({
+                        linkText: match.mtch.match[2],
+                        url: match.mtch.match[1]
+                    });
+                }
+            });
+
+            resultArea.innerHTML += JSON.stringify({
+                links: linksArr,
+                emailAdresses: emailsArr
+            });
+
+            infoNode.innerHTML = elements;
+
         },
 
         observe: function() {
@@ -411,8 +461,12 @@ var editor = (function(win) {
             var anchor = selObj.anchorNode;
             var parent;
 
+            if (!anchor) {
+                return;
+            }
+
             // If the current anchor is of type TextNode, get its parent node
-            if(anchor && anchor.nodeType === 3) {
+            if (anchor.nodeType === 3) {
                 anchor = anchor.parentElement;
             }
 
@@ -572,13 +626,35 @@ var editor = (function(win) {
 
 var jsonEdit = document.querySelector('#JSONeditor');
 var jsonButt = document.querySelector('#JSONButton');
-
 var jsonEditor = new editor.Editor(jsonEdit);
+
+var harvestingEdit = document.querySelector('#harvestingEditor');
+var harvestingButt = document.querySelector('#harvestingButton');
+var harvestingEditor = new editor.Editor(harvestingEdit, {
+    codeEditor: false,
+    stickyLine: false,
+});
+var harvestingREdit = document.querySelector('#harvestingResult');
+var harvestingResult = new editor.Editor(harvestingREdit, {
+    codeEditor: false,
+    stickyLine: false,
+    showTopMenu: false,
+    height: 250
+});
+
+var linkPattern = /<a href=["']?(?:mailto:)?([^"']+)["']?>([\w\s]*)<\/a>/gi;
+var linkMsg = new objUtil.Message('Link found', 2);
 
 
 jsonButt.addEventListener('click', function() {
     if (!this.previousElementSibling.checked) {
         jsonEditor.validateJSON();
+    }
+});
+
+harvestingButt.addEventListener('click', function() {
+    if (!this.previousElementSibling.checked) {
+        harvestingEditor.harvesting(linkPattern, linkMsg, harvestingREdit);
     }
 });
 

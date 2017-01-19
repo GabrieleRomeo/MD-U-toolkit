@@ -126,7 +126,7 @@ body {
       padding: 20px; }
     .c-tab .c-content__aside {
       width: 40%;
-      max-height: 700px;
+      max-height: 900px;
       border-color: white;
       background: #f7f7f7;
       overflow-x: hidden;
@@ -271,24 +271,30 @@ body {
   .c-editor--light .c-editor__footer {
     background-color: #949494; }
 
+.c-info__message--warning, .c-info__message--error, .c-info__message--info {
+  padding: 2px; }
+
 .c-info {
   margin: 20px;
   padding: 20px 10px;
+  font-size: 0.85em;
+  font-weight: 300;
   background-color: rgba(255, 255, 255, 0.62); }
   .c-info__header {
     padding: 1px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
   .c-info__title {
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    font-weight: 700; }
   .c-info__table {
     width: 100%;
     margin: 10px; }
-    .c-info__table td:nth-child(1) {
-      width: 15%; }
+    .c-info__table td {
+      padding: 5px 0; }
+    .c-info__table td:nth-child(1),
     .c-info__table td:nth-child(2) {
       width: 20%; }
   .c-info__message {
-    padding: 5px;
     font-variant: small-caps; }
     .c-info__message--warning {
       background-color: yellow; }
@@ -305,7 +311,7 @@ body {
   position: relative;
   width: 260px;
   border: 14px solid white;
-  padding: 40px;
+  padding: 0px;
   margin: 50px auto;
   box-sizing: border-box; }
   .c-button_inner {
