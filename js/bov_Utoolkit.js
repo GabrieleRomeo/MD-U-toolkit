@@ -391,6 +391,147 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             return false;
         }
 
+        function _lnNumbByInx(index, string){
+            // RegExp
+            var line = 0,
+                match,
+                re = /(^)[\S\s]/gm;
+            while ((match = re.exec(string)) !== null) {
+                if(match.index > index)
+                    break;
+                line++;
+            }
+            return line;
+        }
+
+        /**
+         * Search for a pattern
+         * return the first associated key that matches (if any). Null otherwise
+         * @constructor
+         * @param  {Object} match
+         */
+        function Match(match) {
+            this.mtch = match;
+            this.render = function(options) {
+
+                var result = '';
+                var opts = options || {};
+                var severityL = this.mtch.message.getSeverityLevel();
+                var mLength = this.mtch.match.length;
+                var mtchA = this.mtch.match;
+
+                result += '<tr>';
+                result += '<td><span class="c-info__message c-info__message--';
+                result += severityL +'">';
+                result += severityL;
+                result += '</span></td>';
+
+                if (this.mtch.line && opts.showLine) {
+                    result += '<td>at line ' + this.mtch.line +'</td>';
+                } else {
+                    result += '<td></td>';
+                }
+
+                result += '<td>&#96' + this.mtch.message.getMessage() +'&#96</td>';
+
+                if (mLength > 0) {
+                    result += '<tr>';
+                    result += '<td><span class="c-info__message">';
+                    result += 'Full Match</span></td>';
+                    result += '<td>' + mtchA.index + ' - ';
+                    result +=  mtchA.index + mtchA[0].length +'</td>';
+                    result += '<td>' + mtchA[0].replace(/</g, '&lt;') +'</td>';
+                    result += '</tr>';
+
+                    for (var i = 1; i < mLength; i++) {
+                        result += '<tr>';
+                        result += '<td><span class="c-info__message">Group ';
+                        result +=  i +'</span></td>';
+                        result += '<td></td>';
+                        result += '<td>' + mtchA[i] +'</td>';
+                        result += '</tr>';
+                    }
+
+                    result += '</tr>';
+                }
+
+                return result;
+            };
+        }
+
+        /**
+         * Search for a pattern
+         * return the first associated key that matches (if any). Null otherwise
+         * @constructor
+         * @param  {Value} The text of the regular expression
+         * @param  {Object} msg A Message object use as message if a match is found
+         */
+        function Grep(pattern, msg) {
+            this.pattern = pattern;
+            this.regEx = new RegExp(pattern);
+            this.matches = [];
+            this.msg = msg || new Message('Match found', 2);
+        }
+
+        Grep.prototype.exec = function(c) {
+            var match;
+            var self = this;
+
+            while ((match = this.regEx.exec(c)) !== null) {
+                // Replace the %0 placeholder (if any)
+                this.replacePlaceholder(match[0]);
+                this.matches.push(new Match({
+                    message: self.msg,
+                    line: _lnNumbByInx(self.regEx.lastIndex - match[0].length, c),
+                    match: match
+                }));
+            }
+        };
+
+        Grep.prototype.test = function(c) {
+            var search = this.pattern.search(c);
+            if ( search !== -1 ) {
+                this.matches.push(new Match({
+                    message: self.msg,
+                    line: _lnNumbByInx(search, c),
+                    match: search
+                }));
+            }
+        };
+
+        Grep.prototype.replacePlaceholder = function(match0) {
+            // if the message contains the %0 placeholder, replace it with
+            // the first match content
+            var message = this.msg.getMessage().replace(/\%0/g, match0);
+            this.msg.setMessage(message);
+        };
+
+        Grep.prototype.getMatches = function() {
+            return this.matches;
+        };
+
+        var harvesting = function(pattern, message, content) {
+
+            var grep;
+            var results = [];
+
+            if (content.trim().length === 0) {
+                results.push(new Match({
+                    message: new Message('Empty Document', 1),
+                    line: 0,
+                    match: []
+                }));
+
+                return results;
+            }
+
+            grep = new Grep(pattern, message);
+            // Execute the Regular expression
+            grep.exec(content);
+
+            return grep.getMatches();
+        };
+
         /**
          * Create a new Message Object
          * @constructor
@@ -476,7 +617,8 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             toArray: toArray,
             hasValue: hasValue,
             getKeyFromValue: getKeyFromValue,
-            Message: Message
+            Message: Message,
+            harvesting: harvesting
         };
     })(this);
 

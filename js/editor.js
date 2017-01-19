@@ -1,4 +1,5 @@
 var bov_Utoolkit =  bov_Utoolkit || {};
+var objUtil = bov_Utoolkit.namespace('utilities').obj;
 
 var editor = (function(win) {
 
@@ -6,7 +7,7 @@ var editor = (function(win) {
 
 
     function Editor(element, options) {
-        var objUtil = bov_Utoolkit.namespace('utilities').obj;
+
         // Firefox only
         win.document.execCommand('insertBrOnReturn', false, false);
 
@@ -40,7 +41,9 @@ var editor = (function(win) {
             var temp = '';
 
             this.BEM = $(this.element);
+            this.obj = bov_Utoolkit.namespace('utilities').obj;
             this.DOM = bov_Utoolkit.namespace('utilities.DOM');
+            // TODO add sessions
             this.storage = sessionStorage;
 
             this.gutter = this.BEM('gutter').node;
@@ -111,6 +114,24 @@ var editor = (function(win) {
             infoNode.innerHTML = elements;
 
             this.setStickies(errorList);
+        },
+
+        harvesting: function(pattern, message) {
+            var info = this.infoBody;
+            var infoNode = info.node;
+            var harvesting = this.obj.harvesting(pattern, message, this.codeArea.innerText);
+            var elements = '';
+
+            harvesting.forEach( function(match) {
+                elements += '<div class="g-grid">';
+                elements += '<table class="c-info__table">';
+                elements += match.render();
+                elements += '</table>';
+                elements += '</div>';
+            });
+
+            infoNode.innerHTML = elements;
+
         },
 
         observe: function() {
@@ -411,8 +432,12 @@ var editor = (function(win) {
             var anchor = selObj.anchorNode;
             var parent;
 
+            if (!anchor) {
+                return;
+            }
+
             // If the current anchor is of type TextNode, get its parent node
-            if(anchor && anchor.nodeType === 3) {
+            if (anchor.nodeType === 3) {
                 anchor = anchor.parentElement;
             }
 
@@ -572,13 +597,28 @@ var editor = (function(win) {
 
 var jsonEdit = document.querySelector('#JSONeditor');
 var jsonButt = document.querySelector('#JSONButton');
-
 var jsonEditor = new editor.Editor(jsonEdit);
+
+var harvestingEdit = document.querySelector('#harvestingEditor');
+var harvestingButt = document.querySelector('#harvestingButton');
+var harvestingEditor = new editor.Editor(harvestingEdit, {
+    codeEditor: false,
+    stickyLine: false,
+});
+
+var linkPattern = /<a href=["']?(?:mailto:)?([^"']+)["']?>([\w\s]*)<\/a>/gi;
+var linkMsg = new objUtil.Message('Link found', 2);
 
 
 jsonButt.addEventListener('click', function() {
     if (!this.previousElementSibling.checked) {
         jsonEditor.validateJSON();
+    }
+});
+
+harvestingButt.addEventListener('click', function() {
+    if (!this.previousElementSibling.checked) {
+        harvestingEditor.harvesting(linkPattern, linkMsg);
     }
 });
 
