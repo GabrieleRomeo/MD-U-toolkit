@@ -81,6 +81,7 @@ var editor = (function(win) {
                 this.gutter.style.backgroundColor = temp('background-color');
                 this.gutter.style.width = '10px';
                 this.codeArea.style.width = 'calc(100% - 10px)';
+                this.codeArea.style.overflow = 'hidden';
             }
 
             if (!this.settings['showTopMenu']) {
