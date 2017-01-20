@@ -481,12 +481,13 @@ var bov_Utoolkit =  bov_Utoolkit || {};
         Grep.prototype.exec = function(c) {
             var match;
             var self = this;
+            var msg;
 
             while ((match = this.regEx.exec(c)) !== null) {
                 // Replace the %0 placeholder (if any)
-                this.replacePlaceholder(match[0]);
+                msg = this.replacePlaceholder(match[0]);
                 this.matches.push(new Match({
-                    message: self.msg,
+                    message: msg,
                     line: _lnNumbByInx(self.regEx.lastIndex - match[0].length, c) + this.inc,
                     matches: match
                 }));
@@ -510,8 +511,10 @@ var bov_Utoolkit =  bov_Utoolkit || {};
         Grep.prototype.replacePlaceholder = function(match0) {
             // if the message contains the %0 placeholder, replace it with
             // the first match content
-            var message = this.msg.getMessage().replace(/\%0/g, match0);
-            this.msg.setMessage(message);
+            var msg = this.msg.getMessage().replace(/\%0/g, match0);
+            var msgSever = this.msg.getSeverity();
+
+            return new Message(msg, msgSever);
         };
 
         Grep.prototype.getMatches = function() {
