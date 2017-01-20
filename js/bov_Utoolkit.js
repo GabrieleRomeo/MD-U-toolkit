@@ -408,17 +408,21 @@ var bov_Utoolkit =  bov_Utoolkit || {};
          * Search for a pattern
          * return the first associated key that matches (if any). Null otherwise
          * @constructor
-         * @param  {Object} match
+         * @param  {Object} match 'Line number', 'message', 'Matches'
          */
         function Match(match) {
-            this.mtch = match;
+            match = match || {};
+            this.message = match.message;
+            this.line = match.line || void 0;
+            this.matches = match.matches || [];
+
             this.render = function(options) {
 
                 var result = '';
                 var opts = options || {};
-                var severityL = this.mtch.message.getSeverityLevel();
-                var mLength = this.mtch.match.length;
-                var mtchA = this.mtch.match;
+                var severityL = this.message.getSeverityLevel();
+                var mLength = this.matches.length;
+                var mtchA = this.matches;
 
                 result += '<tr>';
                 result += '<td><span class="c-info__message c-info__message--';
@@ -426,13 +430,13 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                 result += severityL;
                 result += '</span></td>';
 
-                if (this.mtch.line && opts.showLine) {
-                    result += '<td>at line ' + this.mtch.line +'</td>';
+                if (this.line && opts.showLine) {
+                    result += '<td>at line ' + this.line +'</td>';
                 } else {
                     result += '<td></td>';
                 }
 
-                result += '<td>&#96' + this.mtch.message.getMessage() +'&#96</td>';
+                result += '<td>&#96' + this.message.getMessage() +'&#96</td>';
 
                 if (mLength > 0) {
                     result += '<tr>';
@@ -483,7 +487,7 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                 this.matches.push(new Match({
                     message: self.msg,
                     line: _lnNumbByInx(self.regEx.lastIndex - match[0].length, c),
-                    match: match
+                    matches: match
                 }));
             }
         };
@@ -494,7 +498,7 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                 this.matches.push(new Match({
                     message: self.msg,
                     line: _lnNumbByInx(search, c),
-                    match: search
+                    matches: search
                 }));
             }
         };
@@ -519,7 +523,7 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                 results.push(new Match({
                     message: new Message('Empty Document', 1),
                     line: 0,
-                    match: []
+                    matches: []
                 }));
 
                 return results;
