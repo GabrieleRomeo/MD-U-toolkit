@@ -145,18 +145,18 @@ var editor = (function(win) {
                 elements += '</table>';
                 elements += '</div>';
 
-                if ( match.mtch.match[0] &&
-                     match.mtch.match[0].indexOf('@') !== -1 ) {
-                    emailsArr.push(match.mtch.match[1]);
+                if ( match.matches[0] &&
+                     match.matches[0].indexOf('@') !== -1 ) {
+                    emailsArr.push(match.matches[1]);
                 } else {
                     linksArr.push({
-                        linkText: match.mtch.match[2],
-                        url: match.mtch.match[1]
+                        linkText: match.matches[2],
+                        url: match.matches[1]
                     });
                 }
             });
 
-            resultArea.innerHTML += JSON.stringify({
+            resultArea.innerHTML = JSON.stringify({
                 links: linksArr,
                 emailAdresses: emailsArr
             });
