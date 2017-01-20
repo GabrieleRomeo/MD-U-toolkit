@@ -605,6 +605,8 @@ var bov_Utoolkit =  bov_Utoolkit || {};
 
         var number = '\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?';
 
+        var comment = /\/\/[^\n]*/g;
+
         var openA = '(?:^|:|,)(?:\\s*\\[)+';
 
         var missingColon = /[^\],](?:]\s*(?:[\]{]){1}[,}\s])/g;
@@ -630,6 +632,8 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             var reg = new RegExp(pattern, 'g');
             var regA = new RegExp(openA, 'g');
 
+            // Remove comments
+            str = str.replace(comment, ' ');
             // Replace each matching type with the ] char
             str = str.replace(reg, ']');
             // Remove the [ char
