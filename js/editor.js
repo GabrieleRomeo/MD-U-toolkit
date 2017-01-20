@@ -145,7 +145,8 @@ var editor = (function(win) {
                 elements += '</table>';
                 elements += '</div>';
 
-                if ( match.mtch.match[0].indexOf('@') !== -1 ) {
+                if ( match.mtch.match[0] &&
+                     match.mtch.match[0].indexOf('@') !== -1 ) {
                     emailsArr.push(match.mtch.match[1]);
                 } else {
                     linksArr.push({
@@ -162,6 +163,10 @@ var editor = (function(win) {
 
             infoNode.innerHTML = elements;
 
+            return {
+                links: linksArr,
+                emailAdresses: emailsArr
+            };
         },
 
         observe: function() {
@@ -654,8 +659,10 @@ jsonButt.addEventListener('click', function() {
 });
 
 harvestingButt.addEventListener('click', function() {
+    var obj = null;
     if (!this.previousElementSibling.checked) {
-        harvestingEditor.harvesting(linkPattern, linkMsg, harvestingREdit);
+        obj = harvestingEditor.harvesting(linkPattern, linkMsg, harvestingREdit);
+        console.log(obj);
     }
 });
 
