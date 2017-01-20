@@ -126,11 +126,8 @@ body {
       padding: 20px; }
     .c-tab .c-content__aside {
       width: 40%;
-      max-height: 900px;
       border-color: white;
-      background: #f7f7f7;
-      overflow-x: hidden;
-      overflow-y: scroll; }
+      background: #f7f7f7; }
 
 .c-upload {
   width: 80%;
@@ -286,6 +283,10 @@ body {
   .c-info__title {
     text-transform: uppercase;
     font-weight: 700; }
+  .c-info__body {
+    max-height: 880px;
+    overflow-x: hidden;
+    overflow-y: scroll; }
   .c-info__table {
     width: 100%;
     margin: 10px; }
