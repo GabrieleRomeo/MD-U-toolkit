@@ -99,22 +99,26 @@ var editor = (function(win) {
             var val = bov_Utoolkit.namespace('validator').JSON;
             var errorList = val.validateJSON(this.codeArea.innerText) || [];
             var Message = bov_Utoolkit.namespace('utilities').obj.Message;
+            var Match = bov_Utoolkit.namespace('utilities').obj.Match;
             var info = '';
             var elements = '';
 
             errorList.forEach( function(error) {
                 elements += '<div class="g-grid">';
                 elements += '<table class="c-info__table">';
-                elements += error.render();
+                elements += error.render({showLine: true});
                 elements += '</table>';
                 elements += '</div>';
             });
 
             // No Errors
             if (errorList.length === 0) {
-                info =  'Congrats! No errors found.\n';
+                info =  'Congratulations! No errors found.\n';
                 info += 'Your JSON is valid';
-                info = new Message(info, 2);
+                info = new Match({
+                    message: new Message(info, 2),
+                    matches: []
+                });
                 elements += '<div class="g-grid">';
                 elements += '<table class="c-info__table">';
                 elements += info.render();
@@ -131,6 +135,8 @@ var editor = (function(win) {
             var info = this.infoBody;
             var infoNode = info.node;
             var harvesting = this.obj.harvesting(pattern, message, this.codeArea.innerText);
+            var Message = bov_Utoolkit.namespace('utilities').obj.Message;
+            var Match = bov_Utoolkit.namespace('utilities').obj.Match;
             var elements = '';
 
             var resultArea = resultEditor.querySelector('.c-editor__codeArea');
@@ -138,25 +144,38 @@ var editor = (function(win) {
             var emailsArr = [];
 
 
+            // No Match Found
+            if (harvesting.length === 0) {
+                info = new Match({
+                    message: new Message('No Link found', 1),
+                    matches: []
+                });
+                elements += '<div class="g-grid">';
+                elements += '<table class="c-info__table">';
+                elements += info.render();
+                elements += '</table>';
+                elements += '</div>';
+            }
+
             harvesting.forEach( function(match) {
                 elements += '<div class="g-grid">';
                 elements += '<table class="c-info__table">';
-                elements += match.render();
+                elements += match.render({showMatches: true});
                 elements += '</table>';
                 elements += '</div>';
 
-                if ( match.mtch.match[0] &&
-                     match.mtch.match[0].indexOf('@') !== -1 ) {
-                    emailsArr.push(match.mtch.match[1]);
+                if ( match.matches[0] &&
+                     match.matches[0].indexOf('@') !== -1 ) {
+                    emailsArr.push(match.matches[1]);
                 } else {
                     linksArr.push({
-                        linkText: match.mtch.match[2],
-                        url: match.mtch.match[1]
+                        linkText: match.matches[2],
+                        url: match.matches[1]
                     });
                 }
             });
 
-            resultArea.innerHTML += JSON.stringify({
+            resultArea.innerHTML = JSON.stringify({
                 links: linksArr,
                 emailAdresses: emailsArr
             });
@@ -514,7 +533,7 @@ var editor = (function(win) {
 
             matches.forEach( function(m) {
                 var line = m.line;
-                var severityL = m.getSeverityLevel();
+                var severityL = m.message.getSeverityLevel();
                 if (line && children[line -1]) {
                     children[line -1].style.backgroundColor = stikies[severityL]['bgkcolor'];
                 }
