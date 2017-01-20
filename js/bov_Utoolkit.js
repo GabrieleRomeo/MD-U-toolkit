@@ -545,42 +545,15 @@ var bov_Utoolkit =  bov_Utoolkit || {};
          * @constructor
          * @param  {String} message A textual message
          * @param  {Int} severity The message's severity level
-         * @param  {Int} line An optional line number
          * @return {Boolean} True | False
          */
-        function Message(message, severity, line /*optional*/) {
+        function Message(message, severity) {
             this.message = message;
             this.severity = 1;
-            this.line = line;
-
 
             if ((typeof severity !== 'undefined') && hasValue(msgSeverities, severity)) {
                 this.severity = severity;
             }
-
-            this.render = function() {
-
-                var severityL = this.getSeverityLevel();
-                var result = '';
-                var line = this.getLine();
-
-                result += '<tr>';
-                result += '<td><span class="c-info__message c-info__message--';
-                result += severityL +'">';
-                result += severityL;
-                result += '</span></td>';
-
-                if (line) {
-                    result += '<td>at line ' + this.getLine() +'</td>';
-                } else {
-                    result += '<td></td>';
-                }
-
-                result += '<td>&#96' + this.getMessage() +'&#96</td>';
-                result += '</tr>';
-
-                return result;
-            };
         }
 
         Message.prototype.setMessage = function(message) {
@@ -589,14 +562,6 @@ var bov_Utoolkit =  bov_Utoolkit || {};
 
         Message.prototype.getMessage = function() {
             return this.message;
-        };
-
-        Message.prototype.setLine = function(line) {
-            this.line = line;
-        };
-
-        Message.prototype.getLine = function() {
-            return this.line;
         };
 
         Message.prototype.setSeverity = function(severity) {

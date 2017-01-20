@@ -99,6 +99,7 @@ var editor = (function(win) {
             var val = bov_Utoolkit.namespace('validator').JSON;
             var errorList = val.validateJSON(this.codeArea.innerText) || [];
             var Message = bov_Utoolkit.namespace('utilities').obj.Message;
+            var Match = bov_Utoolkit.namespace('utilities').obj.Match;
             var info = '';
             var elements = '';
 
@@ -112,9 +113,12 @@ var editor = (function(win) {
 
             // No Errors
             if (errorList.length === 0) {
-                info =  'Congrats! No errors found.\n';
+                info =  'Congratulations! No errors found.\n';
                 info += 'Your JSON is valid';
-                info = new Message(info, 2);
+                info = new Match({
+                    message: new Message(info, 2),
+                    matches: []
+                });
                 elements += '<div class="g-grid">';
                 elements += '<table class="c-info__table">';
                 elements += info.render();
@@ -131,12 +135,27 @@ var editor = (function(win) {
             var info = this.infoBody;
             var infoNode = info.node;
             var harvesting = this.obj.harvesting(pattern, message, this.codeArea.innerText);
+            var Message = bov_Utoolkit.namespace('utilities').obj.Message;
+            var Match = bov_Utoolkit.namespace('utilities').obj.Match;
             var elements = '';
 
             var resultArea = resultEditor.querySelector('.c-editor__codeArea');
             var linksArr = [];
             var emailsArr = [];
 
+
+            // No Match Found
+            if (harvesting.length === 0) {
+                info = new Match({
+                    message: new Message('No Link found', 1),
+                    matches: []
+                });
+                elements += '<div class="g-grid">';
+                elements += '<table class="c-info__table">';
+                elements += info.render();
+                elements += '</table>';
+                elements += '</div>';
+            }
 
             harvesting.forEach( function(match) {
                 elements += '<div class="g-grid">';
