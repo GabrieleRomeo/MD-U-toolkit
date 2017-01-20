@@ -1,0 +1,11 @@
+
+
+$_header-height: conf($conf-header, 'min-height');
+$_footer-height: conf($conf-footer, 'min-height');
+$_main-height: conf($conf-main, 'min-height');
+
+$_main-min-height: calc(#{$_main-height} - (#{$_header-height} + #{$_footer-height}));
+
+.page-main {
+  min-height: $_main-min-height;
+}

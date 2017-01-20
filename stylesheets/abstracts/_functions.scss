@@ -1,0 +1,39 @@
+@function color(
+  $name: 'primary',
+  $variant: $UI-color-key,
+  $opacity: 1,
+  $map: $UI-colors
+) {
+  $color: null;
+
+  // Get the color spectrum
+  $color-spectrum: map-get($map, $name);
+
+  // Get the color variant
+  @if $color-spectrum {
+    $color: map-get($color-spectrum, $variant);
+  }
+
+  // Get the alpha setting
+  $alpha: if(type-of($opacity) == 'number', $opacity, map-get($map, $opacity));
+
+  // Set the alpha of the color
+  @if $alpha {
+    $color: rgba($color, $alpha);
+  }
+
+  @return $color;
+}
+
+@function conf($map, $prop) {
+  @return map-get($map, $prop);
+}
+
+/// Check if the provided parameter is a map
+///
+/// @param {Value} $obj - The value to check
+/// @return {Boolean}
+
+@function is-map($map) {
+  @return type-of($map) == 'map';
+}

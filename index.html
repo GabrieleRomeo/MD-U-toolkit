@@ -1,0 +1,403 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title></title>
+        <meta name="description" content="Utilities toolkit">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- FONT
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Rokkitt:400,700" rel="stylesheet">
+
+        <!-- CSS
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+        <link rel="stylesheet" href="stylesheets/main.css">
+
+        <!-- Favicon
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <!-- TODO apple-touch-icon -->
+
+        <!-- ICON
+          –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+        <script src="https://use.fontawesome.com/118670e9e2.js"></script>
+    </head>
+    <body>
+
+      <!--[if lt IE 8]>
+          <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+      <![endif]-->
+
+      <header class="page-header" id="page-header" role="banner">
+        <div class="l-container">
+        </div>
+      </header>
+
+      <aside class="page-aside" role="complementary">
+        <nav class="c-sideNav" role="navigation">
+        <ul class="c-sideNav__list">
+          <li class="c-sideNav__item c-sideNav__item--isActive">
+            <a class="c-sideNav__link" href="#!JSON">
+              <i class="c-sideNav__icon fa fa-file-code-o" aria-hidden="true"></i>
+              JSON
+            </a>
+          </li>
+          <li class="c-sideNav__item">
+            <a class="c-sideNav__link" href="#!Harvesting">
+              <i class="c-sideNav__icon fa fa-list-ul" aria-hidden="true"></i>
+              Harvesting
+            </a>
+          </li>
+        </ul>
+        </nav>
+      </aside>
+
+      <main class="page-main" role="main">
+        <div class="l-container">
+
+          <!-- Start Tab -->
+          <div class="c-tab c-tab--isActive">
+            <div class="l-grid">
+              <div class="c-tab__divider">
+                <ul class="c-tab__list">
+                  <li class="c-tab__item c-tab__item--isActive">
+                    <i class="c-tab__icon fa fa-code" aria-hidden="true"></i>
+                    code
+                  </li>
+                  <li class="c-tab__item">
+                    <i class="c-tab__icon  fa fa-share-square" aria-hidden="true"></i>
+                    upload file
+                  </li>
+                </ul>
+                <span class="c-tab__label">JSON</span>
+              </div>
+
+              <!-- Start Tab Content -->
+              <div class="c-tab__content c-tab__content--isActive">
+
+                <div class="c-content">
+                  <div class="c-content__main">
+
+                    <!-- Start editor -->
+                    <div class="c-editor c-editor--black" id="JSONeditor">
+                      <div class="c-editor__header">
+                      </div>
+                      <div class="c-editor__body">
+                        <div class="c-editor__gutter">
+                          <ul class="c-editor__gutterList">
+                          </ul>
+                        </div>
+                        <div class="c-editor__codeArea" tabindex="0" contenteditable="true">
+                        </div>
+                      </div>
+                      <div class="c-editor__footer">
+                        <div class="c-editor__info"></div>
+                      </div>
+                    </div>
+                    <!-- end editor -->
+
+                    <!-- validation button -->
+                    <div class="c-button">
+                      <div class="c-button_inner">
+                        <input id="validation" type="checkbox">
+                        <label id="JSONButton" for="validation">
+                          <div class="validation_button">
+                            <div class="validation_button__tick"></div>
+                            <div class="validation_button__ticked"></div>
+                            <span class="validation_button__text">
+                              Validate my JSON
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- end validation button -->
+
+                  </div>
+
+                  <div class="c-content__aside">
+                    <div class="c-info">
+                      <div class="c-info__header">
+                        <h2 class="c-info__title">Analysis Information</h2>
+                      </div>
+                      <div class="c-info__body">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End content -->
+
+              </div>
+              <!-- End Tab Content -->
+
+
+              <div class="c-tab__content">
+
+                <!-- Start File Upload -->
+                <div class="c-upload">
+
+                  <div class="c-upload__header">
+                    <h2 class="c-upload__title c-upload__title--big">file upload</h2>
+                  </div>
+
+                  <div class="c-upload__body">
+                    <div class="l-grid">
+                      <div class="c-upload__area">
+                          <i class="c-upload__icon fa fa-upload" aria-hidden="true">
+                          </i>
+                          <p class="c-upload__paragraph">Drag File to upload</p>
+                      </div>
+                      <div class="c-upload__button">
+                        choose file
+                        <input class="c-upload__input c-upload__input--file" type="file">
+                      </div>
+                    </div>
+                    <div class="l-grid">
+                      <h4 class="c-upload__title">uploading</h4>
+                      <ul class="c-upload__list">
+                        <li class="c-upload__item">
+                          <div class="c-file">
+                            <i class="c-file__icon c-file__icon--file fa fa-file-text-o" aria-hidden="true"></i>
+                            <i class="c-file__icon c-file__icon--close fa fa-times" aria-hidden="true"></i>
+                            <div class="c-file__header">
+                              <span class="c-file__name">File-1.json</span>
+                              <span class="c-file__size">2 Mb</span>
+                            </div>
+                            <div class="c-file__progressBar">
+                              <div class="p15"></div>
+                            </div>
+                            <div class="c-file__footer">
+                              <span class="c-file__status">15%</span>
+                              <span class="c-file__speed">200 Kb/s</span>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="c-upload__item">
+                          <div class="c-file">
+                            <i class="c-file__icon c-file__icon--file fa fa-file-text-o" aria-hidden="true"></i>
+                            <i class="c-file__icon c-file__icon--close fa fa-times" aria-hidden="true"></i>
+                            <div class="c-file__header">
+                              <span class="c-file__name">File-2.json</span>
+                              <span class="c-file__size">1 Mb</span>
+                            </div>
+                            <div class="c-file__progressBar">
+                              <div class="p85"></div>
+                            </div>
+                            <div class="c-file__footer">
+                              <span class="c-file__status">85%</span>
+                              <span class="c-file__speed">310 Kb/s</span>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="c-upload__item">
+                          <div class="c-file">
+                            <i class="c-file__icon c-file__icon--file fa fa-file-text-o" aria-hidden="true"></i>
+                            <i class="c-file__icon c-file__icon--close fa fa-times" aria-hidden="true"></i>
+                            <div class="c-file__header">
+                              <span class="c-file__name">File-3.json</span>
+                              <span class="c-file__size">5 Mb</span>
+                            </div>
+                            <div class="c-file__progressBar">
+                              <div class="p100"></div>
+                            </div>
+                            <div class="c-file__footer">
+                              <span class="c-file__status">Completed</span>
+                              <span class="c-file__speed"></span>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- End File Upload -->
+
+              </div>
+              <!-- End Tab Content -->
+
+            </div>
+          </div>
+          <!-- End Tab -->
+
+          <!-- Start Tab -->
+          <div class="c-tab">
+            <div class="l-grid">
+              <div class="c-tab__divider">
+                <ul class="c-tab__list">
+                  <li class="c-tab__item c-tab__item--isActive">
+                    <i class="c-tab__icon fa fa-code" aria-hidden="true"></i>
+                    code
+                  </li>
+                  <li class="c-tab__item">
+                    <i class="c-tab__icon  fa fa-share-square" aria-hidden="true"></i>
+                    upload file
+                  </li>
+                </ul>
+                <span class="c-tab__label">Harvesting</span>
+              </div>
+
+              <!-- Start Tab Content -->
+              <div class="c-tab__content c-tab__content--isActive">
+
+                <div class="c-content">
+                  <div class="c-content__main">
+
+                    <!-- Start editor -->
+                    <div class="c-editor c-editor--light" id="harvestingEditor">
+                      <div class="c-editor__header">
+                      </div>
+                      <div class="c-editor__body">
+                        <div class="c-editor__gutter">
+                          <ul class="c-editor__gutterList">
+                          </ul>
+                        </div>
+                        <div class="c-editor__codeArea" tabindex="0" contenteditable="true">
+                        </div>
+                      </div>
+                      <div class="c-editor__footer">
+                        <div class="c-editor__info"></div>
+                      </div>
+                    </div>
+                    <!-- end editor -->
+
+                    <!-- validation button -->
+                    <div class="c-button">
+                      <div class="c-button_inner">
+                        <input id="harvesting" type="checkbox">
+                        <label id="harvestingButton" for="harvesting">
+                          <div class="validation_button">
+                            <div class="validation_button__tick"></div>
+                            <div class="validation_button__ticked"></div>
+                            <span class="validation_button__text">
+                              Harvesting Links
+                            </span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- end validation button -->
+
+                    <!-- Start editor -->
+                    <div class="c-editor c-editor--light" id="harvestingResult" contenteditable="true">
+                      <div class="c-editor__header">
+                      </div>
+                      <div class="c-editor__body">
+                        <div class="c-editor__gutter">
+                          <ul class="c-editor__gutterList">
+                          </ul>
+                        </div>
+                        <div class="c-editor__codeArea" tabindex="0">
+                        </div>
+                      </div>
+                      <div class="c-editor__footer">
+                        <div class="c-editor__info"></div>
+                      </div>
+                    </div>
+                    <!-- end editor -->
+
+
+                  </div>
+
+                  <div class="c-content__aside">
+                    <div class="c-info">
+                      <div class="c-info__header">
+                        <h2 class="c-info__title">Analysis Information</h2>
+                      </div>
+                      <div class="c-info__body">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End content -->
+
+              </div>
+              <!-- End Tab Content -->
+
+
+              <div class="c-tab__content">
+
+                <!-- Start File Upload -->
+                <div class="c-upload">
+
+                  <div class="c-upload__header">
+                    <h2 class="c-upload__title c-upload__title--big">file upload</h2>
+                  </div>
+
+                  <div class="c-upload__body">
+                    <div class="l-grid">
+                      <div class="c-upload__area">
+                          <i class="c-upload__icon fa fa-upload" aria-hidden="true">
+                          </i>
+                          <p class="c-upload__paragraph">Drag File to upload</p>
+                      </div>
+                      <div class="c-upload__button">
+                        choose file
+                        <input class="c-upload__input c-upload__input--file" type="file">
+                      </div>
+                    </div>
+                    <div class="l-grid">
+                      <h4 class="c-upload__title">uploading</h4>
+                      <ul class="c-upload__list">
+                        <li class="c-upload__item">
+                          <div class="c-file">
+                            <i class="c-file__icon c-file__icon--file fa fa-file-text-o" aria-hidden="true"></i>
+                            <i class="c-file__icon c-file__icon--close fa fa-times" aria-hidden="true"></i>
+                            <div class="c-file__header">
+                              <span class="c-file__name">File-1.txt</span>
+                              <span class="c-file__size">10 kb</span>
+                            </div>
+                            <div class="c-file__progressBar">
+                              <div class="p15"></div>
+                            </div>
+                            <div class="c-file__footer">
+                              <span class="c-file__status">15%</span>
+                              <span class="c-file__speed">10 Kb/s</span>
+                            </div>
+                          </div>
+                        </li>
+                        <li class="c-upload__item">
+                          <div class="c-file">
+                            <i class="c-file__icon c-file__icon--file fa fa-file-text-o" aria-hidden="true"></i>
+                            <i class="c-file__icon c-file__icon--close fa fa-times" aria-hidden="true"></i>
+                            <div class="c-file__header">
+                              <span class="c-file__name">File-2.txt</span>
+                              <span class="c-file__size">200 Kb</span>
+                            </div>
+                            <div class="c-file__progressBar">
+                              <div class="p85"></div>
+                            </div>
+                            <div class="c-file__footer">
+                              <span class="c-file__status">85%</span>
+                              <span class="c-file__speed">25 Kb/s</span>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <!-- End File Upload -->
+
+              </div>
+              <!-- End Tab Content -->
+
+            </div>
+          </div>
+          <!-- End Tab -->
+
+        </div>
+      </main>
+
+      <footer class="page-footer" id="page-footer" role="contentinfo">
+        <div class="l-container">
+        </div>
+      </footer>
+
+      <script src="js/bov_Utoolkit.js"></script>
+      <script src="js/tab.js"></script>
+      <script src="js/editor.js"></script>
+
+    </body>
+</html>

@@ -1,0 +1,6 @@
+
+.l-container {
+  padding-left: conf($conf-sideNav, 'width');
+  background-color: color('background');
+  min-height: inherit;
+}

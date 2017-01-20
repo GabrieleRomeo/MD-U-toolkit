@@ -1,0 +1,154 @@
+
+$theme-black--bgColor--isActive: rgba(255, 255, 255, 0.08);
+$theme-light--bgColor--isActive: rgba(255, 0, 0, 0.81);
+
+$UI-editor: (
+  headerHeight: 60px,
+  footerHeight: 24px,
+  gutterWidth: 34px,
+  'c-editor': (
+    themes: (
+      'black': (
+        'codeArea': (
+          background-color: #171a1e,
+          color: #f8f8f2,
+        ),
+        'codeLine--isActive': (
+          background-color: $theme-black--bgColor--isActive
+        ),
+        'gutter': (
+          background-color: #262d33
+        ),
+        'gutterLine': (
+          color: #8f908a
+        ),
+        'gutterLine--isActive': (
+          background-color: $theme-black--bgColor--isActive
+        ),
+        'footer': (
+          background-color: #2f2f2f,
+          color: #bbbbbb,
+          border-top: 1px solid rgba(0, 0, 0, 0.25)
+        )
+      ),
+      'light': (
+        'codeArea': (
+          background-color: #f0f0f0,
+          color: #171a1e,
+        ),
+        'codeLine--isActive': (
+          background-color: $theme-light--bgColor--isActive
+        ),
+        'gutter': (
+          background-color: #eee,
+          border-right: 1px solid #ccc
+        ),
+        'gutterLine': (
+          color: #000000
+        ),
+        'gutterLine--isActive': (
+          color: $theme-light--bgColor--isActive,
+          background-color: rgba(255, 255, 255, 0.8)
+        ),
+        'footer': (
+          background-color: #949494
+        )
+      ),
+    )
+  )
+);
+
+@mixin themefy($map, $sel: null) {
+
+  $sel: if($sel == null and &, str-slice("#{&}", 2), str-slice($sel, 2));
+
+@debug $sel;
+  $themes: map-get(map-get($map, $sel), themes);
+
+  // Iterate over the available themes
+    @each $theme, $colors in $themes {
+      @at-root .#{$sel}--#{$theme} {
+        // Iterate over the colors from the specific theme
+        @each $property, $value in $colors {
+            @if not is-map($value) {
+              #{$property}: #{$value};
+            } @else {
+              .#{$sel}__#{$property} {
+                // A map property represents a child selector
+                @each $sub-property, $sub-value in $value {
+                    #{$sub-property}: #{$sub-value};
+                }
+              }
+            }
+          }
+      }
+    }
+}
+
+$gutter-width: map-get($UI-editor, gutterWidth);
+$header-height: map-get($UI-editor, headerHeight);
+$footer-height: map-get($UI-editor, footerHeight);
+
+
+.c-editor {
+  position: relative;
+  height: 450px;
+  width: 100%;
+  font-family: monaco, Consolas, "Lucida Console", "Courier New", monospace;
+  font-size: 14px;
+  overflow: hidden;
+
+    //.c-editor__header
+    @include e(header) {
+      @extend %flex;
+      min-height: $header-height;
+      width: 100%;
+    }
+
+    //.c-editor__body
+    @include e(body) {
+      @extend %flex;
+      width: 100%;
+      height: calc(100% - #{$header-height} - #{$footer-height});
+      overflow: hidden;
+    }
+
+    //.c-editor__footer
+    @include e(footer) {
+      @extend %flex;
+      width: 100%;
+      font-size: .9em;
+      padding: 2px 5px;
+      min-height: $footer-height;
+    }
+
+    //.c-editor__gutter
+    @include e(gutter) {
+      position: relative;
+      width: $gutter-width;
+    }
+
+    //.c-editor__gutterList
+    @include e(gutterList) {
+      position: relative;
+      text-align: right;
+    }
+
+    //.c-editor__gutterLine
+    @include e(gutterLine) {
+      padding-right: 5px;
+      counter-increment: step-counter;
+
+        &:before {
+          content: counter(step-counter);
+        };
+    }
+
+    //.c-editor__codeArea
+    @include e(codeArea) {
+      width: calc(100% - #{$gutter-width});
+      overflow: auto;
+    }
+
+  @include themefy($UI-editor);
+}

@@ -1,0 +1,57 @@
+
+$_color: map-get($colors, 'light-text');
+
+.c-sideNav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: conf($conf-sideNav, 'width');
+  height: 100%;
+  padding-top: 100px;
+  background-color: color('primary');
+  color: conf($_color, 'disabled');
+
+    // .c-sideNav__item
+    @include element(item) {
+      @extend %flex-column-centered;
+      position: relative;
+      padding: 20px;
+      margin-bottom: 10px;
+
+        // .c-sideNav__item--isActive
+        @include modifier('isActive') {
+          color: conf($_color, 'primary');
+          border-left: 5px solid color('accent');
+
+          .c-sideNav__icon {
+            color: color('accent');
+          }
+        }
+
+        &:hover {
+          background-color: color('primary', 'dark');
+        };
+
+        &:after {
+          content: '...';
+          position: absolute;
+          bottom: -10px;
+          letter-spacing: 4px;
+          font-weight: 600;
+          color: conf($_color, 'disabled');
+        };
+    }
+
+  // .c-sideNav__icon
+  @include element(icon) {
+    color: inherit;
+    font-size: 1.5em !important;
+  }
+
+  @include element(link) {
+    @extend %flex-column-centered;
+    min-height: 50px;
+    color: inherit;
+    justify-content: space-between;
+  }
+}
