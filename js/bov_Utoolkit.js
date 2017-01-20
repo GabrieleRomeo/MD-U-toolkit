@@ -438,7 +438,7 @@ var bov_Utoolkit =  bov_Utoolkit || {};
 
                 result += '<td>&#96' + this.message.getMessage() +'&#96</td>';
 
-                if (mLength > 0) {
+                if (mLength > 0 && opts.showMatches) {
                     result += '<tr>';
                     result += '<td><span class="c-info__message">';
                     result += 'Full Match</span></td>';
@@ -470,11 +470,12 @@ var bov_Utoolkit =  bov_Utoolkit || {};
          * @param  {Value} The text of the regular expression
          * @param  {Object} msg A Message object use as message if a match is found
          */
-        function Grep(pattern, msg) {
+        function Grep(pattern, msg, inc) {
             this.pattern = pattern;
             this.regEx = new RegExp(pattern);
             this.matches = [];
             this.msg = msg || new Message('Match found', 2);
+            this.inc = inc || 0;
         }
 
         Grep.prototype.exec = function(c) {
@@ -486,18 +487,21 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                 this.replacePlaceholder(match[0]);
                 this.matches.push(new Match({
                     message: self.msg,
-                    line: _lnNumbByInx(self.regEx.lastIndex - match[0].length, c),
+                    line: _lnNumbByInx(self.regEx.lastIndex - match[0].length, c) + this.inc,
                     matches: match
                 }));
             }
         };
 
         Grep.prototype.test = function(c) {
-            var search = this.pattern.search(c);
+            c = c || '';
+            var search = c.search(this.pattern);
+            var self = this;
+
             if ( search !== -1 ) {
                 this.matches.push(new Match({
                     message: self.msg,
-                    line: _lnNumbByInx(search, c),
+                    line: _lnNumbByInx(search, c) + this.inc,
                     matches: search
                 }));
             }
@@ -622,6 +626,8 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             hasValue: hasValue,
             getKeyFromValue: getKeyFromValue,
             Message: Message,
+            Grep: Grep,
+            Match: Match,
             harvesting: harvesting
         };
     })(this);
@@ -629,15 +635,24 @@ var bov_Utoolkit =  bov_Utoolkit || {};
     bov_Utoolkit.namespace('validator').JSON = (function(){
 
         var string = '"\\s*[^"]*\\s*"';
+
         var boolean = '(?:true|false|null)\\b';
+
         var number = '\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?';
+
         var openA = '(?:^|:|,)(?:\\s*\\[)+';
-        var missingColon = '[^\\],](?:]\\s*(?:[\\]{]){1}[,}\\s])';
-        var missingProp = '[,{]\\s*[^\\]]:';
-        var missingValue = '[,{]\\s*]\\s*:?\\s*[,}]';
-        var missingComma = '[:\\]]\\s*(?:]\\s+(?=]))|(}\\s*])';
-        var extraComma = ',\\s*}';
-        var other = '(?:[^\\]{},:\\s]+)';
+
+        var missingColon = /[^\],](?:]\s*(?:[\]{]){1}[,}\s])/g;
+
+        var missingProp = /[,{]\s*[^\]]:/g;
+
+        var missingValue = /[,{]\s*]\s*:?\s*[,}]/g;
+
+        var missingComma = /[:\]]\s*(?:]\s+(?=]))|(}\s*])/g;
+
+        var extraComma = /,\s*}/g;
+
+        var other = /(?:[^\]{},:\s]+)/g;
 
         /**
          * Extract the internal structure of a JSON document
@@ -681,92 +696,93 @@ var bov_Utoolkit =  bov_Utoolkit || {};
          */
         var validateJSON = function(str) {
 
-            var errorList = [];
             var Message = bov_Utoolkit.namespace('utilities').obj.Message;
-            var errMsg = '';
             var structure = extractStructure(str).trim();
-
-            var regEx;
-            var match;
-            var line;
+            var errorList = [];
+            var result;
 
             // Check for obj structure
             // The number of opening bracket must be equal to the closing ones
             var openB  = (structure.match(/{/g) || []).length;
             var closeB = (structure.match(/}/g) || []).length;
 
+            var Grep = bov_Utoolkit.namespace('utilities').obj.Grep;
+            var Match = bov_Utoolkit.namespace('utilities').obj.Match;
+            var grep;
 
-            // The base structure contains only spaces
-            if ( /^\s*$/.test(structure) ) {
-                errorList.push(new Message('Empty JSON document', 1, 0));
-                return errorList;
+
+            grep = new Grep(/^\s*$/, new Message('Empty JSON document', 1));
+            grep.test(structure);
+
+            result = grep.getMatches();
+
+            if (result.length) {
+                errorList = _concat(errorList, grep.getMatches());
             }
 
             // Check if the number of both closing and opening brackets is equal
             if (openB > closeB) {
-                line = lineNumberByIndex(structure.length -1, structure);
-                errMsg = 'Missing closing bracket }. Invalid Object structure';
-                errorList.push(new Message(errMsg, 0, line));
+                errorList = _concat(errorList, new Match({
+                    message: new Message('Missing closing bracket }. Invalid Object structure', 1),
+                    line: lineNumberByIndex(structure.length -1, structure),
+                    matches: []
+                }));
             } else if (openB < closeB) {
-                errMsg = 'Missing opening bracket {. Invalid Object structure';
-                errorList.push(new Message(errMsg, 0));
+                errorList = _concat(errorList, new Match({
+                    message: new Message('Missing opening bracket {. Invalid Object structure', 1),
+                    line: 0,
+                    matches: []
+                }));
             }
 
             // Check for missing colons
+            grep = new Grep(missingColon, new Message('Missing Colon :', 0));
+            grep.exec(structure);
+            errorList = _concat(errorList, grep.getMatches());
 
-            regEx = new RegExp(missingColon, 'g');
-
-            while ((match = regEx.exec(structure)) !== null) {
-                line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                errorList.push(new Message('Missing Colon :', 0, line));
-            }
 
             // Check for missing properties
-            regEx = new RegExp(missingProp, 'g');
 
-            while ((match = regEx.exec(structure)) !== null) {
-                line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                // Since the pattern match includes also the previous { char wich could
-                // be located on the previous line, increse the line number by 1
-                errorList.push(new Message('Missing Property', 0, line + 1));
-            }
+            // Since the pattern match includes also the previous { char wich could
+            // be located on the previous line, increse the line number by 1
+            grep = new Grep(missingProp, new Message('Missing Property', 0), 1);
+            grep.exec(structure);
+            errorList = _concat(errorList, grep.getMatches());
+
 
             // Check for missing commas
-            regEx = new RegExp(missingComma, 'g');
+            grep = new Grep(missingComma, new Message('Missing Comma ,', 0));
+            grep.exec(structure);
+            errorList = _concat(errorList, grep.getMatches());
 
-            while ((match = regEx.exec(structure)) !== null) {
-                line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                errorList.push(new Message('Missing Comma ,', 0, line));
-            }
 
             // Check for missing values
-            regEx = new RegExp(missingValue, 'g');
 
-            while ((match = regEx.exec(structure)) !== null) {
-                line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                // Since the pattern match includes also the previous { char wich could
-                // be located on the previous line, increse the line number by 1
-                errorList.push(new Message('Missing Value', 0, line + 1));
-            }
+            // Since the pattern match includes also the previous { char wich could
+            // be located on the previous line, increse the line number by 1
+            grep = new Grep(missingValue, new Message('Missing Value', 0), 1);
+            grep.exec(structure);
+            errorList = _concat(errorList, grep.getMatches());
+
 
             // Check for extra commas
-            regEx = new RegExp(extraComma, 'g');
+            grep = new Grep(extraComma, new Message('Unnecessary Comma ,', 0));
+            grep.exec(structure);
+            errorList = _concat(errorList, grep.getMatches());
 
-            while ((match = regEx.exec(structure)) !== null) {
-                line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                errorList.push(new Message('Unnecessary Comma ,', 0, line));
-            }
 
             // Check for any extra content
-            regEx = new RegExp(other, 'g');
+            grep = new Grep(other, new Message('Invalid content: %0', 0));
+            grep.exec(structure);
+            errorList = _concat(errorList, grep.getMatches());
 
-            while ((match = regEx.exec(structure)) !== null) {
-                line = lineNumberByIndex(regEx.lastIndex - match[0].length, structure);
-                errorList.push(new Message('Invalid content: ' + match[0] +'', 0, line));
-            }
 
             return errorList;
         };
+
+        function _concat(a, b) {
+            return a.concat(b);
+        }
 
         return {
             validateJSON: validateJSON

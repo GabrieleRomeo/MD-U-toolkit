@@ -105,7 +105,7 @@ var editor = (function(win) {
             errorList.forEach( function(error) {
                 elements += '<div class="g-grid">';
                 elements += '<table class="c-info__table">';
-                elements += error.render();
+                elements += error.render({showLine: true});
                 elements += '</table>';
                 elements += '</div>';
             });
@@ -141,7 +141,7 @@ var editor = (function(win) {
             harvesting.forEach( function(match) {
                 elements += '<div class="g-grid">';
                 elements += '<table class="c-info__table">';
-                elements += match.render();
+                elements += match.render({showMatches: true});
                 elements += '</table>';
                 elements += '</div>';
 
@@ -514,7 +514,7 @@ var editor = (function(win) {
 
             matches.forEach( function(m) {
                 var line = m.line;
-                var severityL = m.getSeverityLevel();
+                var severityL = m.message.getSeverityLevel();
                 if (line && children[line -1]) {
                     children[line -1].style.backgroundColor = stikies[severityL]['bgkcolor'];
                 }
