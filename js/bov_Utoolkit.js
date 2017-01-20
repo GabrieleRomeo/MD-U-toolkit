@@ -604,7 +604,7 @@ var bov_Utoolkit =  bov_Utoolkit || {};
 
         var string = '"\\s*[^"]*\\s*"';
 
-        var boolean = '(?:true|false|null)\\b';
+        var boolean = '(?:true|false|null)(?!:)\\b';
 
         var number = '\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?';
 
@@ -620,7 +620,7 @@ var bov_Utoolkit =  bov_Utoolkit || {};
 
         var missingComma = /[:\]]\s*(?:]\s+(?=]))|(}\s*])/g;
 
-        var extraComma = /,\s*}/g;
+        var extraComma = /(?:{\s*,)|(?:,\s*})|(\s*,\s*)+,/g;
 
         var other = /(?:[^\]{},:\s]+)/g;
 
@@ -635,6 +635,8 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             var reg = new RegExp(pattern, 'g');
             var regA = new RegExp(openA, 'g');
 
+            // Remove all spaces
+            str = str.replace(/ /g, '');
             // Remove comments
             str = str.replace(comment, ' ');
             // Replace each matching type with the ] char
@@ -695,13 +697,19 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             // Check if the number of both closing and opening brackets is equal
             if (openB > closeB) {
                 errorList = _concat(errorList, new Match({
-                    message: new Message('Missing closing bracket }. Invalid Object structure', 1),
+                    message: new Message('Missing closing bracket }. Invalid Object structure', 0),
                     line: lineNumberByIndex(structure.length -1, structure),
                     matches: []
                 }));
             } else if (openB < closeB) {
                 errorList = _concat(errorList, new Match({
-                    message: new Message('Missing opening bracket {. Invalid Object structure', 1),
+                    message: new Message('Missing opening bracket {. Invalid Object structure', 0),
+                    line: 0,
+                    matches: []
+                }));
+            } else if ( (openB === closeB) && openB === 0) {
+                errorList = _concat(errorList, new Match({
+                    message: new Message('Missing brackets { }. Invalid Object structure', 0),
                     line: 0,
                     matches: []
                 }));
