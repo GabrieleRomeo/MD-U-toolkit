@@ -33,6 +33,7 @@ $_border-properties: 1px solid conf($colors, 'dividers');
 
     //.c-info__table
     @include e(table) {
+      width: 95%;
       margin: 10px;
 
         td {
