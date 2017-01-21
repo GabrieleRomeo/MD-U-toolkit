@@ -669,6 +669,7 @@ var harvestingEditor = new editor.Editor(harvestingEdit, {
     codeEditor: false,
     stickyLine: false,
 });
+
 var harvestingREdit = document.querySelector('#harvestingResult');
 var harvestingResult = new editor.Editor(harvestingREdit, {
     codeEditor: false,
@@ -677,20 +678,29 @@ var harvestingResult = new editor.Editor(harvestingREdit, {
     height: 250
 });
 
+
 var linkPattern = /<a href=["']?(?:mailto:)?([^"']+)["']?>([\w\s]*)<\/a>/gi;
 var linkMsg = new objUtil.Message('Link found', 2);
 
 
 jsonButt.addEventListener('click', function() {
+    var self = this;
     if (!this.previousElementSibling.checked) {
         jsonEditor.validateJSON();
+        setTimeout(function() {
+            self.previousElementSibling.checked = false;
+        }, 2000);
     }
 });
 
 harvestingButt.addEventListener('click', function() {
     var obj = null;
+    var self = this;
     if (!this.previousElementSibling.checked) {
         obj = harvestingEditor.harvesting(linkPattern, linkMsg, harvestingREdit);
+        setTimeout(function() {
+            self.previousElementSibling.checked = false;
+        }, 2000);
         console.log(obj);
     }
 });
