@@ -82,6 +82,7 @@ var editor = (function(win) {
                 this.gutter.style.width = '10px';
                 this.codeArea.style.width = 'calc(100% - 10px)';
                 this.codeArea.style.overflow = 'hidden';
+                this.removeFormatting();
             }
 
             if (!this.settings['showTopMenu']) {
@@ -376,6 +377,15 @@ var editor = (function(win) {
                 // Update visual information
                 self.highlightLine();
                 self.updateFooterInfo();
+            });
+        },
+
+        removeFormatting: function() {
+            this.codeArea.addEventListener('paste', function(e) {
+                e.preventDefault();
+                var text = e.clipboardData.getData('text/plain');
+                text = text.replace(/</g, '&lt;');
+                document.execCommand('insertHTML', false, text);
             });
         },
 
