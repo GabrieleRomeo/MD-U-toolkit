@@ -763,7 +763,7 @@ var bov_Utoolkit =  bov_Utoolkit || {};
             grep.exec(structure);
             errorList = _concat(errorList, grep.getMatches());
 
-console.log(structure);
+
             return errorList;
         };
 

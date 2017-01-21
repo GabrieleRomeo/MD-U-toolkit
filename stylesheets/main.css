@@ -272,7 +272,7 @@ body {
   padding: 2px; }
 
 .c-info {
-  margin: 20px;
+  margin: 15px;
   padding: 20px 10px;
   font-size: 0.85em;
   font-weight: 300;
@@ -288,7 +288,7 @@ body {
     overflow-x: hidden;
     overflow-y: scroll; }
   .c-info__table {
-    width: 100%;
+    width: 95%;
     margin: 10px; }
     .c-info__table td {
       padding: 5px 0; }
