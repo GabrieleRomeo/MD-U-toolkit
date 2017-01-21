@@ -488,7 +488,7 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                 msg = this.replacePlaceholder(match[0]);
                 this.matches.push(new Match({
                     message: msg,
-                    line: _lnNumbByInx(self.regEx.lastIndex - match[0].length, c) + this.inc,
+                    line: _lnNumbByInx(match.index, c) + this.inc,
                     matches: match
                 }));
             }
@@ -612,6 +612,8 @@ var bov_Utoolkit =  bov_Utoolkit || {};
 
         var openA = '(?:^|:|,)(?:\\s*\\[)+';
 
+        var emptyObj = /{\s*{\s*}\s*}/g;
+
         var missingColon = /[^\],](?:]\s*(?:[\]{]){1}[,}\s])/g;
 
         var missingProp = /[,{]\s*[^\]]:/g;
@@ -714,6 +716,11 @@ var bov_Utoolkit =  bov_Utoolkit || {};
                     matches: []
                 }));
             }
+
+            // Check for empty objects
+            grep = new Grep(emptyObj, new Message('Empty Object. Invalid Object structure', 0));
+            grep.exec(structure);
+            errorList = _concat(errorList, grep.getMatches());
 
             // Check for missing colons
             grep = new Grep(missingColon, new Message('Missing Colon :', 0));
