@@ -6,7 +6,7 @@ $_border-properties: 1px solid conf($colors, 'dividers');
 }
 
 .c-info {
-  margin: 20px;
+  margin: 15px;
   padding: 20px 10px;
   font-size: 0.85em;
   font-weight: 300;
@@ -33,7 +33,6 @@ $_border-properties: 1px solid conf($colors, 'dividers');
 
     //.c-info__table
     @include e(table) {
-      width: 100%;
       margin: 10px;
 
         td {
