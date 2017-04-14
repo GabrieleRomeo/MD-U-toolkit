@@ -1,3 +1,5 @@
+'use strict';
+
 var bov_Utoolkit =  bov_Utoolkit || {};
 
 (function(win) {
